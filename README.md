@@ -1,18 +1,21 @@
 # Daytona Words 1–50
 
-A timed sight-word reading race for a second grader.
+A timed sight-word reading race for young readers at Fellowship Christian School.
+The visual system mixes Fellowship navy and maroon with gold, checkered flags,
+speed stripes, and the recognizable Fellowship Paladin athletics mark. It is stock-car inspired without
+using official NASCAR or Daytona 500 logos.
 
 Press **GO**, read all 50 words out loud, then hit the checkered flag to stop
-the clock. It keeps a track record and recent laps so she can watch herself get
-faster week to week.
+the clock. It keeps a track record and recent laps so readers can watch themselves
+get faster week to week.
 
 **Play it:** https://jasonh80.github.io/daytona-words/
 
 ## Two modes
 
-- **I'll tap the flag** — a grown-up presses FINISH when she reads the last word.
+- **I'll tap the flag** — a grown-up presses FINISH after the last word.
   Works on every device.
-- **Listen to me read** — the microphone checks words off as she says them and the
+- **Listen to me read** — the microphone checks words off as they are read and the
   race ends itself at 50. Needs Chrome or Safari, and browser speech recognition
   is unreliable on children's voices, so any word can also be tapped by hand.
 
@@ -32,9 +35,11 @@ near the top of the script in `index.html`.
 | File | What it is |
 |---|---|
 | `index.html` | The whole game — markup, styles and script in one file |
+| `fcs-paladin-head.gif` | Fellowship Paladin athletics mark used throughout the game |
+| `icon-master.svg` | Editable race-team crest used to render the install icons |
 | `manifest.webmanifest` | Home-screen install metadata |
 | `sw.js` | Offline caching. Page is network-first, assets cache-first |
-| `make-icon.py` | Regenerates `icon-512.png` (no image library needed) |
+| `make-icon.py` | Renders `icon-master.svg` into the three app icon sizes on macOS |
 
 Best times and settings live in each browser's local storage, so every device
 keeps its own record.

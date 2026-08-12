@@ -8,11 +8,11 @@
 <!-- Installs to the home screen and runs without browser chrome.
      These 404 harmlessly when the file is opened straight off the disk. -->
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#15171c">
+<meta name="theme-color" content="#071b33">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Daytona 50">
+<meta name="apple-mobile-web-app-title" content="Daytona Words 1–50">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
@@ -559,6 +559,317 @@ textarea{
 .danger{color:#ff9d9d;background:none;border:none;font-family:inherit;font-size:13px;cursor:pointer;padding:8px 0;text-decoration:underline;}
 
 @media (orientation:landscape) and (max-height:560px){ .finish{height:64px;} }
+
+/* ============================================================
+   FELLOWSHIP PALADIN RACE TEAM THEME
+   School-spirit navy + maroon, with original stock-car details.
+   ============================================================ */
+:root{
+  --asphalt:#071b33;
+  --asphalt-2:#0b2745;
+  --line:#31516f;
+  --paper:#fffaf0;
+  --ink:#10253d;
+  --red:#8c2444;
+  --yellow:#f7c948;
+  --green:#39d67d;
+  --blue:#43b7e9;
+  --muted:#a8bdd0;
+  --maroon:#7b1f3a;
+  --maroon-bright:#a83254;
+  --cream:#fff8e8;
+}
+
+body{
+  background:var(--asphalt);
+  background-image:
+    radial-gradient(circle at 18% 18%,rgba(67,183,233,.08),transparent 24%),
+    linear-gradient(135deg,transparent 0 48%,rgba(255,255,255,.018) 48% 52%,transparent 52% 100%);
+  background-size:auto,24px 24px;
+}
+button:focus-visible, textarea:focus-visible{
+  outline:3px solid var(--yellow);
+  outline-offset:3px;
+}
+
+.flagstrip{
+  z-index:4;height:12px;
+  background-color:#fff;
+  background-image:conic-gradient(#071b33 25%,#fff 0 50%,#071b33 0 75%,#fff 0);
+  background-size:24px 24px;
+  border-bottom:3px solid var(--yellow);
+}
+.flagstrip.bottom{border-bottom:0;border-top:3px solid var(--maroon-bright);}
+
+#start{
+  padding:26px 20px 24px;
+  background:
+    radial-gradient(ellipse at 50% -20%,#1b5079 0%,#0b2949 35%,var(--asphalt) 72%),
+    var(--asphalt);
+  isolation:isolate;
+  overflow-x:hidden;
+}
+#start::before{
+  content:"";position:absolute;z-index:-1;
+  width:min(900px,110vw);height:min(480px,56vw);
+  left:50%;top:50%;transform:translate(-50%,-47%);
+  border:2px solid rgba(255,255,255,.055);
+  border-radius:50%;
+  box-shadow:0 0 0 24px rgba(255,255,255,.018),0 0 0 58px rgba(255,255,255,.012);
+  pointer-events:none;
+}
+#start::after{
+  content:"";position:absolute;z-index:-1;inset:12px 0;
+  background:
+    linear-gradient(112deg,transparent 0 8%,rgba(123,31,58,.7) 8% 9.4%,transparent 9.4% 11%,rgba(247,201,72,.8) 11% 12%,transparent 12% 13.2%,rgba(67,183,233,.62) 13.2% 13.8%,transparent 13.8% 100%),
+    linear-gradient(68deg,transparent 0 86.2%,rgba(67,183,233,.42) 86.2% 86.8%,transparent 86.8% 88%,rgba(247,201,72,.55) 88% 89%,transparent 89% 90.2%,rgba(123,31,58,.5) 90.2% 91.4%,transparent 91.4% 100%);
+  opacity:.72;pointer-events:none;
+}
+
+.school-lockup{
+  display:flex;align-items:center;justify-content:center;gap:11px;
+  margin:4px 0 10px;
+  text-align:left;
+}
+.school-mark{
+  width:58px;height:64px;flex:0 0 auto;object-fit:cover;object-position:center;
+  padding:3px;background:#fff;
+  clip-path:polygon(50% 0,94% 13%,86% 73%,50% 100%,14% 73%,6% 13%);
+  filter:drop-shadow(0 0 0 var(--yellow)) drop-shadow(0 6px 10px rgba(0,0,0,.4));
+}
+.school-name{
+  font-size:12px;font-weight:900;letter-spacing:.16em;line-height:1.25;
+  text-transform:uppercase;color:#fff;
+}
+.school-name small{
+  display:block;margin-top:3px;color:var(--yellow);
+  font-size:9px;letter-spacing:.22em;font-weight:850;
+}
+.race-kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  margin:0 0 6px;padding:5px 12px;
+  border:1px solid rgba(247,201,72,.48);border-radius:999px;
+  background:rgba(247,201,72,.09);color:var(--yellow);
+  font-size:9px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;
+}
+.race-kicker::before,.race-kicker::after{content:"";width:18px;height:2px;background:currentColor;opacity:.65;}
+.series-bars{
+  display:flex;justify-content:center;gap:5px;height:5px;margin:9px auto 0;
+  transform:skew(-28deg);width:min(270px,60vw);
+}
+.series-bars span{display:block;flex:1;border-radius:1px;box-shadow:0 2px 5px rgba(0,0,0,.25);}
+.series-bars span:nth-child(1){background:var(--maroon-bright);flex:1.35;}
+.series-bars span:nth-child(2){background:#ff6a3d;}
+.series-bars span:nth-child(3){background:var(--yellow);}
+.series-bars span:nth-child(4){background:var(--blue);flex:1.4;}
+
+.title{
+  font-size:clamp(30px,5.6vw,58px);
+  font-style:italic;letter-spacing:-.045em;
+  color:#fff;background:none;-webkit-text-fill-color:initial;
+  text-shadow:0 4px 0 rgba(0,0,0,.24);
+  transform:skew(-3deg);
+}
+.title .title-top{
+  display:block;font-size:.44em;letter-spacing:.32em;
+  color:var(--blue);margin:0 0 .18em .38em;
+}
+.title .fifty{
+  display:inline-block;margin-left:.08em;
+  font-size:1.55em;line-height:.72;
+  color:var(--yellow);background:none;-webkit-text-fill-color:initial;
+  letter-spacing:-.09em;
+  text-shadow:5px 5px 0 var(--maroon),8px 8px 0 rgba(0,0,0,.3);
+}
+.subtitle{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  color:#d9e6f0;font-size:clamp(10px,2vw,13px);letter-spacing:.14em;
+  margin:11px 0 0;
+}
+.subtitle span{display:inline-flex;align-items:center;gap:10px;}
+.subtitle span + span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--yellow);}
+
+.flags{margin-top:9px;}
+.chip{background:rgba(247,201,72,.12);border-color:rgba(247,201,72,.55);color:var(--yellow);}
+
+.modes{
+  gap:5px;margin-top:15px;padding:4px;
+  border-radius:12px;background:rgba(1,11,23,.52);border-color:#31516f;
+  box-shadow:inset 0 1px rgba(255,255,255,.04);
+}
+.mode{
+  min-height:40px;padding:9px 17px;border-radius:9px;
+  font-size:12px;color:#c6d5e2;
+}
+.mode.on{
+  color:#fff;background:linear-gradient(180deg,var(--maroon-bright),var(--maroon));
+  box-shadow:0 4px 12px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.16);
+}
+.modehint{margin-top:7px;font-size:11.5px;color:#b4c7d7;}
+
+.go{
+  margin:18px 0 6px;
+  width:min(42vw,174px);height:min(42vw,174px);
+  border:8px solid #06101d;
+  color:#031c10;
+  background:radial-gradient(circle at 36% 27%,#b0ffd1 0%,#46e58b 26%,#20bd68 65%,#0a713e 100%);
+  box-shadow:
+    0 0 0 5px var(--yellow),
+    0 0 0 11px #101722,
+    0 13px 32px rgba(0,0,0,.52),
+    inset 0 -11px 18px rgba(0,0,0,.25),
+    inset 0 5px 10px rgba(255,255,255,.38);
+  animation:paladinPulse 2.35s ease-in-out infinite;
+  font-size:clamp(31px,8vw,50px);
+  line-height:.8;
+}
+.go span{
+  display:block;margin-top:10px;
+  font-size:9px;line-height:1;letter-spacing:.16em;text-transform:uppercase;
+}
+@keyframes paladinPulse{
+  0%,100%{box-shadow:0 0 0 5px var(--yellow),0 0 0 11px #101722,0 13px 32px rgba(0,0,0,.52),inset 0 -11px 18px rgba(0,0,0,.25),inset 0 5px 10px rgba(255,255,255,.38);}
+  50%{box-shadow:0 0 0 7px var(--yellow),0 0 0 16px rgba(67,183,233,.28),0 13px 40px rgba(0,0,0,.62),inset 0 -11px 18px rgba(0,0,0,.25),inset 0 5px 10px rgba(255,255,255,.38);}
+}
+.hint{font-size:11px;color:#a9bed0;}
+.hint b{color:#fff;}
+
+.record{
+  margin-top:12px;padding:8px 16px;border-radius:9px;
+  background:linear-gradient(100deg,rgba(123,31,58,.32),rgba(255,255,255,.04));
+  border-color:rgba(247,201,72,.48);
+  position:relative;overflow:hidden;
+}
+.record::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--yellow);}
+.record .lbl{color:#d2dfeb;font-size:9px;}
+.record .val{font-size:20px;color:var(--yellow);}
+.tools{margin-top:13px;}
+.tbtn{
+  border-radius:9px;border-color:#365776;background:rgba(255,255,255,.055);
+  color:#dbe7f0;font-size:11.5px;
+}
+.tbtn:hover{background:rgba(67,183,233,.15);border-color:var(--blue);}
+
+#count{
+  background:
+    linear-gradient(135deg,rgba(123,31,58,.33),transparent 48%),
+    radial-gradient(circle at 50% 40%,#153b5b,var(--asphalt) 68%);
+}
+.lights{padding:16px;border-radius:24px;background:#050c14;border:4px solid #29435a;box-shadow:0 18px 45px rgba(0,0,0,.5);}
+.countword{font-style:italic;text-transform:uppercase;text-shadow:4px 5px 0 rgba(0,0,0,.3);}
+
+#race{background:linear-gradient(180deg,#071b33,#0a213a);}
+.hud{
+  padding-top:max(10px,env(safe-area-inset-top));
+  background:linear-gradient(100deg,#07172a 0%,#0b2d4d 55%,#551328 100%);
+  border-bottom:4px solid var(--yellow);
+  box-shadow:0 5px 16px rgba(0,0,0,.28);
+}
+.hud .who{color:#9fb7ca;}
+.hud .who b{color:var(--yellow);}
+.hud-lockup{display:flex;align-items:center;gap:9px;}
+.hud-mark{
+  width:34px;height:38px;object-fit:cover;padding:2px;background:#fff;
+  clip-path:polygon(50% 0,94% 13%,86% 73%,50% 100%,14% 73%,6% 13%);
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.38));
+}
+.clock{color:#fff;text-shadow:3px 3px 0 var(--maroon);}
+.board{
+  background:var(--cream);border:4px solid var(--yellow);border-radius:12px;
+  box-shadow:0 0 0 4px var(--maroon),0 12px 32px rgba(0,0,0,.5);
+}
+.cell.band{background:#e7eff3;}
+.cell .n{color:#7890a3;}
+body.voice .cell.done{background:#d9f5e5;color:#23663f;}
+body.voice .cell.next{background:#fff0b8;box-shadow:inset 0 0 0 3px var(--maroon);}
+.vbar{background:#0b2745;border-bottom-color:#365776;}
+.vbar .track{background:#03101d;}
+.vbar .fill{background:linear-gradient(90deg,var(--maroon-bright),var(--yellow),var(--green));}
+.heard{background:#061626;border-bottom-color:#365776;}
+
+.finish{
+  border-radius:10px;border:4px solid var(--yellow);
+  box-shadow:0 0 0 4px var(--maroon),0 10px 25px rgba(0,0,0,.55);
+}
+.finish .flag{
+  background-color:#fff;
+  background-image:conic-gradient(#071b33 25%,#fff 0 50%,#071b33 0 75%,#fff 0);
+}
+.finish .label{
+  background:linear-gradient(180deg,var(--maroon-bright),var(--maroon));
+  border:2px solid var(--yellow);border-radius:8px;color:#fff;
+  box-shadow:0 5px 12px rgba(0,0,0,.42);
+}
+
+#done{
+  background:
+    linear-gradient(125deg,transparent 0 12%,rgba(123,31,58,.46) 12% 14%,transparent 14% 16%,rgba(247,201,72,.36) 16% 17%,transparent 17% 100%),
+    radial-gradient(ellipse at 50% -10%,#17476e 0%,var(--asphalt) 65%);
+  overflow-x:hidden;
+}
+.headline{font-style:italic;text-shadow:3px 3px 0 var(--maroon);}
+.victory-label{
+  margin:0 0 6px;color:var(--yellow);font-size:9px;font-weight:900;
+  letter-spacing:.24em;text-transform:uppercase;
+}
+.headline.record{color:var(--yellow);text-shadow:4px 4px 0 var(--maroon);}
+.bigtime{color:#fff;text-shadow:6px 6px 0 var(--maroon),9px 9px 0 rgba(0,0,0,.25);}
+.big{
+  border-radius:10px;background:linear-gradient(180deg,#ffe071,var(--yellow));
+  color:#17243a;box-shadow:0 7px 0 #a87808,0 12px 24px rgba(0,0,0,.35);
+}
+.big.ghost{background:rgba(255,255,255,.07);border-color:#476986;color:#fff;box-shadow:none;}
+.laps{border-top-color:#476986;}
+.lap{color:#c7d7e4;}
+.lap .p{color:var(--yellow);}
+
+.sheet{
+  background:linear-gradient(180deg,#0d2c4b,#071b33);
+  border:2px solid #416785;border-top:5px solid var(--maroon-bright);
+  box-shadow:0 24px 70px rgba(0,0,0,.6);
+}
+.sheet h3{font-style:italic;text-transform:uppercase;color:var(--yellow);letter-spacing:.04em;}
+.tg.on{background:var(--maroon-bright);}
+textarea{background:#041321;border-color:#416785;}
+.preview{border-color:#416785;}
+
+@media (max-width:560px){
+  #start{justify-content:flex-start;padding-top:24px;}
+  .school-lockup{margin-top:4px;}
+  .school-mark{width:46px;height:51px;}
+  .school-name{font-size:10px;}
+  .race-kicker{font-size:7.5px;padding:4px 9px;}
+  .title{font-size:clamp(28px,9vw,43px);}
+  .title .fifty{display:block;margin:.12em 0 0;font-size:1.6em;}
+  .subtitle{margin-top:8px;font-size:9px;gap:7px;}
+  .modes{margin-top:12px;width:min(100%,380px);}
+  .mode{flex:1;padding:8px 9px;white-space:normal;line-height:1.15;}
+  .modehint{min-height:32px;margin-bottom:0;}
+  .go{margin-top:11px;width:min(37vw,148px);height:min(37vw,148px);border-width:6px;}
+  .tools{margin-top:11px;}
+  .tbtn{padding:8px 12px;}
+}
+@media (orientation:landscape) and (max-height:620px){
+  #start{justify-content:flex-start;padding-top:18px;}
+  #start::before{height:220px;box-shadow:0 0 0 18px rgba(255,255,255,.018),0 0 0 38px rgba(255,255,255,.012);}
+  .school-lockup{position:absolute;left:25px;top:32px;margin:0;}
+  .school-lockup .school-name{display:none;}
+  .race-kicker{margin-top:0;}
+  .title{font-size:34px;}
+  .title .title-top{display:none;}
+  .title .fifty{font-size:1.25em;}
+  .subtitle{margin-top:6px;}
+  .modes{margin-top:9px;}
+  .modehint{margin-top:4px;}
+  .go{width:112px;height:112px;margin:9px 0 3px;font-size:34px;border-width:5px;}
+  .go span{font-size:7px;margin-top:6px;}
+  .hint{margin:1px 0;}
+  .record{margin-top:6px;}
+  .tools{position:absolute;right:20px;top:38px;margin:0;flex-direction:column;}
+}
+@media (prefers-reduced-motion:reduce){
+  .go{animation:none;}
+}
 </style>
 </head>
 <body>
@@ -567,18 +878,23 @@ textarea{
 <section id="start" class="screen on">
   <div class="flagstrip"></div>
 
-  <h1 class="title">Daytona Words<span class="fifty">1&ndash;50</span></h1>
-  <p class="subtitle">Read all 50 &middot; Beat the clock</p>
+  <div class="school-lockup" aria-label="Fellowship Christian School">
+    <img class="school-mark" src="fcs-paladin-head.gif" alt="">
+    <span class="school-name">Fellowship Christian School</span>
+  </div>
+  <h1 class="title">Daytona Words <span class="fifty">1&ndash;50</span></h1>
+  <p class="subtitle"><span>50 words</span><span>One fast reader</span></p>
+  <div class="series-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <div class="flags" id="onFlags"></div>
 
   <div class="modes">
     <button class="mode on" id="modeTap" data-mode="tap">I'll tap the flag</button>
     <button class="mode" id="modeVoice" data-mode="voice">Listen to me read</button>
   </div>
-  <p class="modehint" id="modeHint">You press FINISH when she reads the last word.</p>
+  <p class="modehint" id="modeHint">A grown-up waves the flag after the last word.</p>
 
-  <button class="go" id="goBtn">GO</button>
-  <p class="hint">Press <b>GO</b> to start &middot; spacebar works too</p>
+  <button class="go" id="goBtn">GO!<span>Start your engine</span></button>
+  <p class="hint">Press <b>GO!</b> to start &middot; spacebar works too</p>
 
   <div class="record" id="recordBox" hidden>
     <span class="lbl">Track Record</span>
@@ -608,7 +924,7 @@ textarea{
 <!-- ============================ RACE ============================ -->
 <section id="race" class="screen">
   <div class="hud">
-    <div class="who">Daytona Words<b>1&ndash;50</b></div>
+    <div class="who"><span class="hud-lockup"><img class="hud-mark" src="fcs-paladin-head.gif" alt=""><span>Daytona Words<b>1&ndash;50</b></span></span></div>
     <div class="clock" id="clock">0.0</div>
   </div>
 
@@ -621,7 +937,7 @@ textarea{
   <div class="board" id="board"></div>
   <button class="finish" id="finishBtn">
     <span class="flag"></span>
-    <span class="label" id="finishLabel">FINISH</span>
+    <span class="label" id="finishLabel">WAVE THE FLAG</span>
   </button>
 </section>
 
@@ -651,10 +967,10 @@ textarea{
 <canvas id="confetti"></canvas>
 
 <!-- ========================== WORD EDITOR ========================== -->
-<div class="modal" id="editModal">
+<div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="wordsTitle">
   <div class="sheet">
-    <h3>The 50 Words</h3>
-    <p class="note">One word per line, in the order she reads them. Paste the list straight from her sheet &mdash; extra blank lines are ignored.</p>
+    <h3 id="wordsTitle">The 50 Words</h3>
+    <p class="note">One word per line, in reading order. Paste the list straight from the class sheet &mdash; extra blank lines are ignored.</p>
     <textarea id="wordsInput" spellcheck="false"></textarea>
     <div class="count" id="wordCount">0 words</div>
     <div class="btnrow">
@@ -668,25 +984,25 @@ textarea{
 </div>
 
 <!-- =========================== SETTINGS =========================== -->
-<div class="modal" id="setModal">
+<div class="modal" id="setModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
   <div class="sheet">
-    <h3>Settings</h3>
+    <h3 id="settingsTitle">Settings</h3>
     <p class="note">Saved on this computer &mdash; they'll stick around for next time.</p>
 
     <div class="row">
       <div>
-        <div class="rl">Show the clock while she reads</div>
-        <div class="rd">Turn this off if watching the timer makes her rush or worry. You'll still get the time at the finish.</div>
+        <div class="rl">Show the clock during the race</div>
+        <div class="rd">Turn this off if watching the timer makes your reader rush or worry. The finish time still appears after the lap.</div>
       </div>
-      <button class="tg" id="tgClock"></button>
+      <button class="tg" id="tgClock" aria-label="Show the clock during the race"></button>
     </div>
 
     <div class="row">
       <div>
         <div class="rl">Shuffle the word order</div>
-        <div class="rd">Mixes the words up each race so she reads them, not memorizes them.</div>
+        <div class="rd">Mixes the words each lap so the reader practices reading, not memorizing the order.</div>
       </div>
-      <button class="tg" id="tgShuffle"></button>
+      <button class="tg" id="tgShuffle" aria-label="Shuffle the word order"></button>
     </div>
 
     <div class="row">
@@ -694,15 +1010,15 @@ textarea{
         <div class="rl">Sound</div>
         <div class="rd">Countdown beeps, engine rev, and a finish-line cheer.</div>
       </div>
-      <button class="tg" id="tgSound"></button>
+      <button class="tg" id="tgSound" aria-label="Sound"></button>
     </div>
 
     <div class="row">
       <div>
         <div class="rl">Crowd at the finish line</div>
-        <div class="rd">The grandstand cheering when she crosses. <button class="preview" id="hearCheer">Hear it</button></div>
+        <div class="rd">The grandstand cheers at the checkered flag. <button class="preview" id="hearCheer">Hear it</button></div>
       </div>
-      <button class="tg" id="tgCheer"></button>
+      <button class="tg" id="tgCheer" aria-label="Crowd at the finish line"></button>
     </div>
 
     <div class="row">
@@ -710,13 +1026,13 @@ textarea{
         <div class="rl">Handwriting-style letters</div>
         <div class="rd">Switches to the rounded letter shapes used in early-grade classrooms.</div>
       </div>
-      <button class="tg" id="tgFont"></button>
+      <button class="tg" id="tgFont" aria-label="Handwriting-style letters"></button>
     </div>
 
     <div class="row">
       <div>
         <div class="rl">Word size</div>
-        <div class="rd">Bump this up if she's sitting back from the screen.</div>
+        <div class="rd">Bump this up if the reader is sitting back from the screen.</div>
       </div>
       <div class="stepper">
         <button id="szDown">&minus;</button>
@@ -1469,7 +1785,7 @@ function beginRace(){
 
   $("vbar").hidden  = !voice;
   $("heard").hidden = !voice;
-  $("finishLabel").textContent = voice ? "STOP" : "FINISH";
+  $("finishLabel").textContent = voice ? "STOP RACE" : "WAVE THE FLAG";
   document.body.classList.toggle("voice", voice);
 
   if(voice){
@@ -1506,10 +1822,10 @@ function finishRace(){
     $("doneTime").textContent = fmt(ms);
     stopFlag();
     $("flagWave").hidden = true;      // she didn't cross the line, so no flag
-    head.textContent = "Stopped Early";
+    head.textContent = "Pit Stop";
     head.classList.remove("record");
     delta.textContent = "Got through " + checked.size + " of " + raceWords.length +
-                        " words — this one doesn't go on the board.";
+                        " words — nice practice! This lap doesn't go on the board.";
     delta.className = "delta";
     renderLaps();
     show("done");
@@ -1530,17 +1846,17 @@ function finishRace(){
   if(isRecord && prevBest !== null){
     head.textContent = "New Track Record!";
     head.classList.add("record");
-    delta.textContent = fmt(prevBest - ms) + " seconds faster than her best";
+    delta.textContent = fmt(prevBest - ms) + " seconds faster than the previous best!";
     delta.className = "delta better";
   }else if(isRecord){
     head.textContent = "Checkered Flag!";
     head.classList.remove("record");
-    delta.textContent = "First lap on the board — that's the time to beat.";
+    delta.textContent = "First lap on the board — that is the time to beat!";
     delta.className = "delta";
   }else{
     head.textContent = "Checkered Flag!";
     head.classList.remove("record");
-    delta.textContent = fmt(ms - prevBest) + " off her best of " + fmt(prevBest);
+    delta.textContent = fmt(ms - prevBest) + " off the best of " + fmt(prevBest);
     delta.className = "delta worse";
   }
 
@@ -1747,6 +2063,11 @@ function paintSettings(){
   $("tgSound").classList.toggle("on", state.sound);
   $("tgCheer").classList.toggle("on", state.cheer);
   $("tgFont").classList.toggle("on", state.kidFont);
+  $("tgClock").setAttribute("aria-pressed", state.showClock);
+  $("tgShuffle").setAttribute("aria-pressed", state.shuffle);
+  $("tgSound").setAttribute("aria-pressed", state.sound);
+  $("tgCheer").setAttribute("aria-pressed", state.cheer);
+  $("tgFont").setAttribute("aria-pressed", state.kidFont);
   $("szVal").textContent = state.size + "%";
   document.body.classList.toggle("kidfont", state.kidFont);
   paintFlags();
@@ -1796,8 +2117,8 @@ function paintMode(){
   document.querySelectorAll(".mode").forEach(b =>
     b.classList.toggle("on", b.dataset.mode === state.mode));
   $("modeHint").textContent = state.mode === "voice"
-    ? "She reads out loud. Each word ticks off as she says it, and the race ends itself at 50."
-    : "You press FINISH when she reads the last word.";
+    ? "Read out loud. Each word checks off as it is heard, and the flag waves at 50."
+    : "A grown-up waves the flag after the last word.";
   document.body.classList.toggle("voice", state.mode === "voice");
   renderRecord();
 }
