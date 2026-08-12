@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daytona Words 1–50</title>
+
+<!-- Installs to the home screen and runs without browser chrome.
+     These 404 harmlessly when the file is opened straight off the disk. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#15171c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daytona 50">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<style>
+/* ============================================================
+   DAYTONA WORDS 1-50
+   A timed sight-word reading race.
+   Everything is in this one file. No internet needed.
+   ============================================================ */
+
+:root{
+  --asphalt:#15171c;
+  --asphalt-2:#1e222a;
+  --line:#2c313c;
+  --paper:#fdfdfb;
+  --ink:#16181d;
+  --red:#e02b2b;
+  --yellow:#ffcc00;
+  --green:#22c55e;
+  --blue:#2563eb;
+  --muted:#8d95a5;
+  --ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --word-font: Verdana, Geneva, "DejaVu Sans", -apple-system, sans-serif;
+}
+body.kidfont{
+  --word-font: "Chalkboard SE", "Comic Sans MS", "Comic Neue", Verdana, sans-serif;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+[hidden]{display:none !important;}
+html,body{height:100%;margin:0;}
+body{
+  font-family:var(--ui);
+  background:var(--asphalt);
+  color:#fff;
+  overflow:hidden;
+  overscroll-behavior:none;
+  -webkit-user-select:none;user-select:none;
+}
+
+/* ---------- screens ---------- */
+.screen{
+  position:fixed;inset:0;
+  display:none;
+  flex-direction:column;
+}
+.screen.on{display:flex;}
+
+/* ============================================================
+   START SCREEN
+   ============================================================ */
+#start{
+  align-items:center;justify-content:center;
+  padding:24px;
+  text-align:center;
+  background:
+    radial-gradient(ellipse at 50% 0%, #2a3040 0%, var(--asphalt) 60%);
+  overflow-y:auto;
+}
+.flagstrip{
+  position:absolute;top:0;left:0;right:0;height:14px;
+  background:#fff;
+  background-image:conic-gradient(#000 25%,#fff 0 50%,#000 0 75%,#fff 0);
+  background-size:14px 14px;
+}
+.flagstrip.bottom{top:auto;bottom:0;}
+
+.title{
+  font-size:clamp(30px,7vw,62px);
+  font-weight:900;
+  letter-spacing:-.02em;
+  line-height:.95;
+  margin:0;
+  text-transform:uppercase;
+  background:linear-gradient(180deg,#fff 40%,#c3cad8 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 2px 0 rgba(0,0,0,.25);
+}
+.title .fifty{
+  display:block;
+  font-size:clamp(46px,13vw,120px);
+  color:transparent;
+  background:linear-gradient(180deg,var(--yellow) 30%,#e08e00 100%);
+  -webkit-background-clip:text;background-clip:text;
+  letter-spacing:-.03em;
+}
+.subtitle{
+  color:var(--muted);
+  font-size:clamp(12px,2.4vw,15px);
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  font-weight:700;
+  margin:10px 0 0;
+}
+
+/* little chips showing which options are switched on for this copy */
+.flags{
+  display:flex;gap:7px;flex-wrap:wrap;justify-content:center;
+  margin-top:12px;min-height:1px;
+}
+.chip{
+  font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  padding:5px 11px;border-radius:999px;
+  background:rgba(255,204,0,.13);
+  border:1px solid rgba(255,204,0,.45);
+  color:var(--yellow);
+}
+.chip.quiet{
+  background:rgba(255,255,255,.06);
+  border-color:var(--line);
+  color:var(--muted);
+}
+
+/* mode picker */
+.modes{
+  display:flex;gap:8px;margin-top:26px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:999px;padding:5px;
+}
+.mode{
+  font-family:inherit;font-size:14px;font-weight:700;
+  padding:10px 20px;border-radius:999px;border:none;cursor:pointer;
+  background:transparent;color:#aeb6c4;white-space:nowrap;
+}
+.mode.on{background:#fff;color:#14161b;}
+.mode:disabled{opacity:.35;cursor:not-allowed;}
+.modehint{
+  color:var(--muted);font-size:12.5px;margin:10px 0 0;
+  max-width:34ch;line-height:1.5;
+}
+
+/* the big GO button */
+.go{
+  margin:34px 0 8px;
+  width:min(64vw,240px);height:min(64vw,240px);
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:clamp(34px,9vw,64px);
+  font-weight:900;
+  letter-spacing:.04em;
+  color:#04310f;
+  background:radial-gradient(circle at 35% 28%, #7bf7a4 0%, #22c55e 45%, #12833c 100%);
+  box-shadow:
+    0 0 0 8px rgba(34,197,94,.16),
+    0 0 0 16px rgba(34,197,94,.07),
+    0 16px 40px rgba(0,0,0,.5),
+    inset 0 -8px 20px rgba(0,0,0,.25);
+  transition:transform .1s ease, box-shadow .15s ease;
+  animation:pulse 2.6s ease-in-out infinite;
+}
+.go:hover{transform:scale(1.03);}
+.go:active{transform:scale(.95);}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 8px rgba(34,197,94,.16),0 0 0 16px rgba(34,197,94,.07),0 16px 40px rgba(0,0,0,.5),inset 0 -8px 20px rgba(0,0,0,.25);}
+  50%{box-shadow:0 0 0 14px rgba(34,197,94,.20),0 0 0 30px rgba(34,197,94,.05),0 16px 40px rgba(0,0,0,.5),inset 0 -8px 20px rgba(0,0,0,.25);}
+}
+.hint{color:var(--muted);font-size:13px;margin-top:4px;}
+
+/* best-time badge */
+.record{
+  margin-top:22px;
+  display:inline-flex;align-items:center;gap:12px;
+  padding:12px 22px;
+  border-radius:999px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+}
+.record .lbl{font-size:11px;letter-spacing:.18em;color:var(--muted);font-weight:700;text-transform:uppercase;}
+.record .val{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--yellow);}
+
+/* small text buttons at the bottom of the start screen */
+.tools{margin-top:26px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.tbtn{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  color:#cfd5e0;
+  font-family:inherit;font-size:13px;font-weight:600;
+  padding:9px 16px;border-radius:999px;cursor:pointer;
+}
+.tbtn:hover{background:rgba(255,255,255,.11);color:#fff;}
+
+/* ============================================================
+   COUNTDOWN
+   ============================================================ */
+#count{
+  align-items:center;justify-content:center;
+  background:#0b0d11;
+}
+.lights{display:flex;gap:clamp(10px,3vw,22px);margin-bottom:30px;}
+.light{
+  width:clamp(42px,11vw,80px);height:clamp(42px,11vw,80px);
+  border-radius:50%;
+  background:#24272e;
+  border:4px solid #34383f;
+  transition:all .12s ease;
+}
+.light.red{background:radial-gradient(circle at 35% 30%,#ff8f8f,#e02b2b 60%,#7a1010);border-color:#ff6b6b;box-shadow:0 0 34px rgba(224,43,43,.75);}
+.light.green{background:radial-gradient(circle at 35% 30%,#9dffbf,#22c55e 60%,#0d6b31);border-color:#6ef29a;box-shadow:0 0 44px rgba(34,197,94,.85);}
+.countword{
+  font-size:clamp(56px,17vw,150px);
+  font-weight:900;letter-spacing:-.02em;
+  color:#fff;
+}
+.countword.green{color:var(--green);}
+
+/* ============================================================
+   RACE SCREEN
+   ============================================================ */
+#race{background:var(--asphalt);}
+
+.hud{
+  flex:0 0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  padding:10px clamp(12px,3vw,22px);
+  background:var(--asphalt-2);
+  border-bottom:1px solid var(--line);
+}
+.hud .who{
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);font-weight:800;line-height:1.4;
+}
+.hud .who b{display:block;color:#fff;letter-spacing:.12em;font-size:12px;}
+.clock{
+  font-variant-numeric:tabular-nums;
+  font-size:clamp(30px,7vw,50px);
+  font-weight:900;
+  color:var(--yellow);
+  letter-spacing:-.01em;
+  line-height:1;
+}
+.clock.hidden{visibility:hidden;}
+
+/* the word board */
+.board{
+  flex:1 1 auto;
+  min-height:0;
+  margin:clamp(8px,1.6vw,16px);
+  background:var(--paper);
+  border-radius:14px;
+  padding:clamp(8px,1.6vw,18px);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);   /* JS overrides both tracks once the board is visible */
+  gap:clamp(3px,.7vw,8px);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+.cell{
+  display:flex;align-items:center;justify-content:center;
+  gap:.5em;
+  color:var(--ink);
+  font-family:var(--word-font);
+  font-weight:700;
+  font-size:var(--wsize,22px);
+  /* must clear ascender + descender (~1.22em in Verdana) or overflow:hidden
+     shears the tails off y / g / p / q */
+  line-height:1.35;
+  border-radius:8px;
+  padding:2px;
+  overflow:hidden;
+}
+.cell .n{
+  font-family:var(--ui);
+  font-size:.52em;
+  font-weight:800;
+  color:#b6bcc7;
+  font-variant-numeric:tabular-nums;
+  min-width:1.6em;
+  text-align:right;
+  flex:0 0 auto;
+}
+.cell .w{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+}
+/* faint row banding so her eye doesn't lose its place */
+.cell.band{background:#f1f2ee;}
+
+/* ---- voice mode ---- */
+body.voice .cell{cursor:pointer;transition:background .12s, color .12s;}
+body.voice .cell.done{
+  background:#dff6e4;
+  color:#2f7d4a;
+}
+body.voice .cell.done .w{text-decoration:line-through;text-decoration-thickness:.08em;}
+body.voice .cell.done .n{color:#8fc9a4;}
+/* the word she's expected to read next */
+body.voice .cell.next{
+  background:#fff5cc;
+  box-shadow:inset 0 0 0 3px var(--yellow);
+}
+body.voice .cell.next .n{color:#c79a00;}
+
+.vbar{
+  flex:0 0 auto;
+  display:flex;align-items:center;gap:12px;
+  padding:0 clamp(12px,3vw,22px) 8px;
+  background:var(--asphalt-2);
+  border-bottom:1px solid var(--line);
+}
+.vbar .track{
+  flex:1 1 auto;height:9px;border-radius:999px;
+  background:#000;overflow:hidden;
+}
+.vbar .fill{
+  height:100%;width:0%;border-radius:999px;
+  background:linear-gradient(90deg,var(--green),#8ef0b0);
+  transition:width .25s ease;
+}
+.vbar .cnt{
+  font-variant-numeric:tabular-nums;font-weight:900;font-size:15px;
+  color:#fff;flex:0 0 auto;
+}
+.heard{
+  flex:0 0 auto;
+  padding:7px clamp(12px,3vw,22px);
+  font-size:13px;color:var(--muted);
+  background:#101216;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  border-bottom:1px solid var(--line);
+}
+.heard b{color:#dfe4ec;font-weight:600;}
+.heard .dot{
+  display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--red);margin-right:7px;vertical-align:middle;
+  animation:live 1.4s ease-in-out infinite;
+}
+@keyframes live{0%,100%{opacity:1;}50%{opacity:.25;}}
+
+.micwarn{
+  margin:12px auto 0;max-width:min(520px,92vw);
+  background:rgba(224,43,43,.12);
+  border:1px solid rgba(224,43,43,.45);
+  border-radius:12px;padding:14px 18px;
+  color:#ffd2d2;font-size:13.5px;line-height:1.55;text-align:left;
+}
+.micwarn b{color:#fff;}
+
+/* the FINISH button */
+.finish{
+  flex:0 0 auto;
+  margin:0 clamp(8px,1.6vw,16px) clamp(10px,2vw,18px);
+  height:clamp(74px,12vh,104px);
+  border:none;border-radius:14px;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:clamp(24px,5.5vw,40px);
+  font-weight:900;
+  letter-spacing:.06em;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+  background:#000;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);
+  transition:transform .08s ease;
+}
+.finish:active{transform:scale(.985);}
+.finish .label{
+  position:relative;z-index:2;
+  display:inline-block;
+  padding:.28em .9em;
+  background:rgba(0,0,0,.82);
+  border-radius:10px;
+  text-shadow:0 2px 6px #000;
+}
+.finish .flag{
+  position:absolute;inset:0;z-index:1;
+  background:#fff;
+  background-image:conic-gradient(#000 25%,#fff 0 50%,#000 0 75%,#fff 0);
+  background-size:26px 26px;
+}
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+#done{
+  align-items:center;justify-content:center;
+  padding:20px;text-align:center;
+  background:radial-gradient(ellipse at 50% 0%, #2a3040 0%, var(--asphalt) 62%);
+  overflow-y:auto;
+}
+.bigtime{
+  font-size:clamp(60px,20vw,170px);
+  font-weight:900;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.04em;
+  line-height:.9;
+  color:#fff;
+  margin:6px 0;
+}
+.headline{
+  font-size:clamp(20px,5vw,34px);
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  margin:0;
+}
+.headline.record{color:var(--yellow);background:none;border:none;padding:0;display:block;}
+.delta{
+  font-size:clamp(14px,3.4vw,19px);
+  font-weight:700;
+  color:var(--muted);
+  margin:2px 0 0;
+}
+.delta.better{color:var(--green);}
+.delta.worse{color:#ff9d9d;}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:28px;}
+.big{
+  font-family:inherit;font-size:19px;font-weight:800;
+  padding:16px 34px;border-radius:12px;border:none;cursor:pointer;
+  background:var(--green);color:#04310f;
+  box-shadow:0 8px 20px rgba(0,0,0,.4);
+}
+.big.ghost{background:rgba(255,255,255,.07);color:#e6e9ef;border:1px solid var(--line);box-shadow:none;}
+.big:active{transform:scale(.97);}
+
+.laps{
+  margin-top:26px;width:min(420px,92vw);
+  border-top:1px solid var(--line);padding-top:14px;
+}
+.laps h4{
+  margin:0 0 10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);
+}
+.lap{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:7px 4px;font-size:14px;color:#c8ceda;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.lap .when{flex:1 1 auto;text-align:left;}
+.lap .t{font-variant-numeric:tabular-nums;font-weight:800;color:#fff;}
+.lap .p{font-size:11px;color:var(--yellow);font-weight:800;letter-spacing:.1em;}
+.lap.gone{opacity:.35;}
+.lap .del{
+  flex:0 0 auto;
+  background:transparent;border:1px solid var(--line);
+  color:var(--muted);font-family:inherit;font-size:12px;font-weight:700;
+  border-radius:8px;padding:5px 10px;cursor:pointer;line-height:1;
+}
+.lap .del:hover{border-color:#6b4247;color:#ff9d9d;}
+
+/* One click removes; this floating bar is the safety net, not a confirm step.
+   Fixed rather than inline so it is reachable from any screen. */
+.undobar{
+  position:fixed;z-index:95;
+  left:50%;transform:translateX(-50%);
+  /* top, not bottom: the lap list it acts on lives at the bottom of the
+     results screen and a bottom toast sits right on top of the rows */
+  top:max(18px, env(safe-area-inset-top, 0px));
+  display:flex;align-items:center;gap:16px;
+  animation:drop .18s ease-out;
+  padding:12px 14px 12px 18px;
+  background:#2b3140;
+  border:1px solid #3c4353;border-radius:12px;
+  box-shadow:0 12px 34px rgba(0,0,0,.55);
+  font-size:13.5px;color:#eef1f6;white-space:nowrap;
+}
+.undobar button{
+  background:var(--yellow);color:#2a2000;border:none;border-radius:8px;
+  font-family:inherit;font-size:13px;font-weight:800;padding:8px 16px;cursor:pointer;
+}
+@keyframes drop{from{opacity:0;transform:translate(-50%,-14px);}to{opacity:1;transform:translate(-50%,0);}}
+
+/* the waving checkered flag on the results screen */
+#flagWave{
+  width:min(560px,92vw);
+  height:clamp(64px,13vw,104px);
+  display:block;
+  margin:0 auto 6px;
+}
+@media (prefers-reduced-motion:reduce){
+  .undobar{animation:none;}
+}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:60;}
+
+/* ============================================================
+   MODAL (settings / word list)
+   ============================================================ */
+.modal{
+  position:fixed;inset:0;z-index:80;
+  display:none;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,.7);
+  padding:18px;
+}
+.modal.on{display:flex;}
+.sheet{
+  width:min(560px,100%);
+  max-height:88vh;overflow-y:auto;
+  background:var(--asphalt-2);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:22px;
+  -webkit-user-select:text;user-select:text;
+}
+.sheet h3{margin:0 0 4px;font-size:19px;}
+.sheet p.note{margin:0 0 18px;color:var(--muted);font-size:13px;line-height:1.5;}
+.row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.row:last-of-type{border-bottom:none;}
+.row .rl{font-size:15px;font-weight:600;}
+.row .rd{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4;}
+.preview{
+  background:rgba(255,255,255,.08);border:1px solid var(--line);color:#dfe4ec;
+  font-family:inherit;font-size:11.5px;font-weight:700;
+  border-radius:999px;padding:4px 11px;cursor:pointer;margin-left:4px;
+}
+.preview:hover{background:rgba(255,255,255,.16);color:#fff;}
+/* toggle */
+.tg{
+  flex:0 0 auto;width:52px;height:30px;border-radius:999px;
+  background:#3a3f4b;border:none;cursor:pointer;position:relative;transition:background .15s;
+}
+.tg:after{
+  content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;
+  border-radius:50%;background:#fff;transition:transform .15s;
+}
+.tg.on{background:var(--green);}
+.tg.on:after{transform:translateX(22px);}
+.stepper{display:flex;align-items:center;gap:6px;flex:0 0 auto;}
+.stepper button{
+  width:36px;height:36px;border-radius:9px;border:1px solid var(--line);
+  background:rgba(255,255,255,.06);color:#fff;font-size:19px;font-weight:800;
+  cursor:pointer;font-family:inherit;line-height:1;
+}
+.stepper span{min-width:46px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums;}
+
+textarea{
+  width:100%;height:230px;
+  background:#12141a;border:1px solid var(--line);border-radius:10px;
+  color:#fff;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;
+  padding:12px;line-height:1.7;resize:vertical;
+}
+.count{font-size:13px;color:var(--muted);margin-top:8px;}
+.count.bad{color:#ff9d9d;}
+.count.good{color:var(--green);}
+.sheet .btnrow{margin-top:18px;}
+.sheet .big{font-size:16px;padding:13px 24px;}
+.danger{color:#ff9d9d;background:none;border:none;font-family:inherit;font-size:13px;cursor:pointer;padding:8px 0;text-decoration:underline;}
+
+@media (orientation:landscape) and (max-height:560px){ .finish{height:64px;} }
+</style>
+</head>
+<body>
+
+<!-- ============================ START ============================ -->
+<section id="start" class="screen on">
+  <div class="flagstrip"></div>
+
+  <h1 class="title">Daytona Words<span class="fifty">1&ndash;50</span></h1>
+  <p class="subtitle">Read all 50 &middot; Beat the clock</p>
+  <div class="flags" id="onFlags"></div>
+
+  <div class="modes">
+    <button class="mode on" id="modeTap" data-mode="tap">I'll tap the flag</button>
+    <button class="mode" id="modeVoice" data-mode="voice">Listen to me read</button>
+  </div>
+  <p class="modehint" id="modeHint">You press FINISH when she reads the last word.</p>
+
+  <button class="go" id="goBtn">GO</button>
+  <p class="hint">Press <b>GO</b> to start &middot; spacebar works too</p>
+
+  <div class="record" id="recordBox" hidden>
+    <span class="lbl">Track Record</span>
+    <span class="val" id="recordVal">&mdash;</span>
+  </div>
+
+  <div class="tools">
+    <button class="tbtn" id="editBtn">Edit the 50 words</button>
+    <button class="tbtn" id="setBtn">Settings</button>
+  </div>
+
+  <div class="micwarn" id="micWarn" hidden></div>
+
+  <div class="flagstrip bottom"></div>
+</section>
+
+<!-- ========================== COUNTDOWN ========================== -->
+<section id="count" class="screen">
+  <div class="lights">
+    <div class="light" data-i="0"></div>
+    <div class="light" data-i="1"></div>
+    <div class="light" data-i="2"></div>
+  </div>
+  <div class="countword" id="countWord">Ready</div>
+</section>
+
+<!-- ============================ RACE ============================ -->
+<section id="race" class="screen">
+  <div class="hud">
+    <div class="who">Daytona Words<b>1&ndash;50</b></div>
+    <div class="clock" id="clock">0.0</div>
+  </div>
+
+  <div class="vbar" id="vbar" hidden>
+    <div class="track"><div class="fill" id="vfill"></div></div>
+    <div class="cnt" id="vcount">0 / 50</div>
+  </div>
+  <div class="heard" id="heard" hidden></div>
+
+  <div class="board" id="board"></div>
+  <button class="finish" id="finishBtn">
+    <span class="flag"></span>
+    <span class="label" id="finishLabel">FINISH</span>
+  </button>
+</section>
+
+<!-- =========================== RESULTS =========================== -->
+<section id="done" class="screen">
+  <canvas id="flagWave"></canvas>
+  <p class="headline" id="doneHead">Checkered Flag!</p>
+  <div class="bigtime" id="doneTime">0.0</div>
+  <p class="delta" id="doneDelta"></p>
+
+  <div class="btnrow">
+    <button class="big" id="againBtn">Race Again</button>
+    <button class="big ghost" id="homeBtn">Home</button>
+  </div>
+
+  <div class="laps" id="lapsBox" hidden>
+    <h4 id="lapsTitle">Recent Laps</h4>
+    <div id="lapList"></div>
+  </div>
+</section>
+
+<div class="undobar" id="undoBar" hidden>
+  <span id="undoMsg"></span>
+  <button id="undoBtn">Undo</button>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<!-- ========================== WORD EDITOR ========================== -->
+<div class="modal" id="editModal">
+  <div class="sheet">
+    <h3>The 50 Words</h3>
+    <p class="note">One word per line, in the order she reads them. Paste the list straight from her sheet &mdash; extra blank lines are ignored.</p>
+    <textarea id="wordsInput" spellcheck="false"></textarea>
+    <div class="count" id="wordCount">0 words</div>
+    <div class="btnrow">
+      <button class="big" id="saveWords">Save List</button>
+      <button class="big ghost" id="cancelWords">Cancel</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <button class="danger" id="resetWords">Reset to the default list</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================== SETTINGS =========================== -->
+<div class="modal" id="setModal">
+  <div class="sheet">
+    <h3>Settings</h3>
+    <p class="note">Saved on this computer &mdash; they'll stick around for next time.</p>
+
+    <div class="row">
+      <div>
+        <div class="rl">Show the clock while she reads</div>
+        <div class="rd">Turn this off if watching the timer makes her rush or worry. You'll still get the time at the finish.</div>
+      </div>
+      <button class="tg" id="tgClock"></button>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="rl">Shuffle the word order</div>
+        <div class="rd">Mixes the words up each race so she reads them, not memorizes them.</div>
+      </div>
+      <button class="tg" id="tgShuffle"></button>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="rl">Sound</div>
+        <div class="rd">Countdown beeps, engine rev, and a finish-line cheer.</div>
+      </div>
+      <button class="tg" id="tgSound"></button>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="rl">Crowd at the finish line</div>
+        <div class="rd">The grandstand cheering when she crosses. <button class="preview" id="hearCheer">Hear it</button></div>
+      </div>
+      <button class="tg" id="tgCheer"></button>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="rl">Handwriting-style letters</div>
+        <div class="rd">Switches to the rounded letter shapes used in early-grade classrooms.</div>
+      </div>
+      <button class="tg" id="tgFont"></button>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="rl">Word size</div>
+        <div class="rd">Bump this up if she's sitting back from the screen.</div>
+      </div>
+      <div class="stepper">
+        <button id="szDown">&minus;</button>
+        <span id="szVal">100%</span>
+        <button id="szUp">+</button>
+      </div>
+    </div>
+
+    <div class="btnrow">
+      <button class="big" id="closeSet">Done</button>
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <button class="danger" id="clearTimes">Erase all saved times</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   THE WORD LIST
+   ------------------------------------------------------------
+   PLACEHOLDER: a standard 2nd-grade sight word list.
+   Swap in her real 50 either by editing the array below,
+   or (easier) with the "Edit the 50 words" button on the
+   start screen — that version is saved on this computer and
+   wins over this list.
+   ============================================================ */
+const DEFAULT_WORDS = [
+  "about","after","again","always","another",
+  "around","because","been","before","best",
+  "both","buy","call","cold","does",
+  "don't","fast","first","five","found",
+  "gave","goes","green","its","made",
+  "many","off","or","pull","read",
+  "right","sing","sit","sleep","tell",
+  "their","these","those","upon","us",
+  "use","very","wash","which","why",
+  "wish","work","would","write","your"
+];
+
+/* ---------- tiny storage helpers ---------- */
+const KEY = "daytonaWords.v1";
+const store = {
+  read(){
+    try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }
+    catch(e){ return {}; }
+  },
+  write(obj){
+    try{ localStorage.setItem(KEY, JSON.stringify(obj)); }catch(e){}
+  }
+};
+
+let state = Object.assign({
+  words: null,        // null = use DEFAULT_WORDS
+  mode: "tap",        // "tap" = grown-up presses FINISH | "voice" = mic checks words off
+  best: null,         // ms  (tap mode)
+  laps: [],           // [{ms, date}]
+  bestVoice: null,    // voice mode keeps its own record — it's a slower way to read
+  lapsVoice: [],
+  showClock: true,
+  shuffle: false,
+  sound: true,
+  cheer: true,        // the crowd at the finish line, separate from the beeps
+  kidFont: false,
+  size: 100           // percent
+}, store.read());
+
+function save(){ store.write(state); }
+function words(){ return (state.words && state.words.length) ? state.words : DEFAULT_WORDS; }
+
+// which record slot the current mode writes to
+function bestKey(){ return state.mode === "voice" ? "bestVoice" : "best"; }
+function lapsKey(){ return state.mode === "voice" ? "lapsVoice" : "laps"; }
+
+/* ---------- element lookup ---------- */
+const $ = id => document.getElementById(id);
+const screens = {
+  start: $("start"), count: $("count"), race: $("race"), done: $("done")
+};
+function show(name){
+  for(const k in screens) screens[k].classList.toggle("on", k === name);
+}
+
+/* ---------- time formatting ---------- */
+// 47.3   |   1:12.8
+function fmt(ms){
+  const total = ms / 1000;
+  const m = Math.floor(total / 60);
+  const s = total - m * 60;
+  if(m > 0) return m + ":" + (s < 10 ? "0" : "") + s.toFixed(1);
+  return s.toFixed(1);
+}
+
+/* ============================================================
+   SOUND  (Web Audio — no files, works offline)
+   ============================================================ */
+let actx = null;
+function audio(){
+  if(!state.sound) return null;
+  if(!actx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    actx = new AC();
+  }
+  if(actx.state === "suspended") actx.resume();
+  return actx;
+}
+function beep(freq, dur, type, vol){
+  const a = audio(); if(!a) return;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type || "sine";
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0, a.currentTime);
+  g.gain.linearRampToValueAtTime(vol || .18, a.currentTime + .012);
+  g.gain.exponentialRampToValueAtTime(.0001, a.currentTime + dur);
+  o.connect(g).connect(a.destination);
+  o.start(); o.stop(a.currentTime + dur + .02);
+}
+function rev(){
+  const a = audio(); if(!a) return;
+  const o = a.createOscillator(), g = a.createGain(), f = a.createBiquadFilter();
+  o.type = "sawtooth";
+  f.type = "lowpass"; f.frequency.value = 900;
+  const t = a.currentTime;
+  o.frequency.setValueAtTime(70, t);
+  o.frequency.exponentialRampToValueAtTime(320, t + .35);
+  o.frequency.exponentialRampToValueAtTime(140, t + .8);
+  g.gain.setValueAtTime(.0001, t);
+  g.gain.linearRampToValueAtTime(.13, t + .06);
+  g.gain.exponentialRampToValueAtTime(.0001, t + .85);
+  o.connect(f).connect(g).connect(a.destination);
+  o.start(t); o.stop(t + .9);
+}
+function fanfare(){
+  const a = audio(); if(!a) return;
+  [523.25, 659.25, 783.99, 1046.5].forEach((hz, i) => {
+    setTimeout(() => beep(hz, .28, "triangle", .16), i * 105);
+  });
+}
+
+// Grandstand applause, rendered into one buffer so it can be genuinely dense.
+// Three things make this read as a crowd rather than as static:
+//   pink noise, not white  — white noise is hiss; real crowds roll off with frequency
+//   ~700 quiet claps, not 70 loud ones — sparse impulses sound like popcorn
+//   warm filtering + a slow swell — bright and flat sounds like a broken radio
+let cheerBuf = null;
+function buildCheer(a){
+  if(cheerBuf) return cheerBuf;
+  const sr = a.sampleRate, dur = 3.0, n = Math.ceil(sr * dur);
+  const buf = a.createBuffer(2, n, sr);
+
+  for(let ch = 0; ch < 2; ch++){
+    const d = buf.getChannelData(ch);
+
+    // pink noise bed — the murmur of the stand (Kellet's approximation)
+    let b0 = 0, b1 = 0, b2 = 0;
+    for(let i = 0; i < n; i++){
+      const w = Math.random() * 2 - 1;
+      b0 = 0.99765 * b0 + w * 0.0990460;
+      b1 = 0.96300 * b1 + w * 0.2965164;
+      b2 = 0.57000 * b2 + w * 1.0526913;
+      d[i] = (b0 + b1 + b2 + w * 0.1848) * 0.055;
+    }
+
+    // the clapping itself: many short decaying bursts, densest early
+    const claps = 700;
+    for(let c = 0; c < claps; c++){
+      const start = Math.floor(Math.pow(Math.random(), 0.75) * dur * 0.9 * sr);
+      const len   = Math.floor(sr * (0.010 + Math.random() * 0.016));
+      const amp   = 0.05 + Math.random() * 0.09;
+      for(let k = 0; k < len && start + k < n; k++){
+        const env = Math.pow(1 - k / len, 3);
+        d[start + k] += (Math.random() * 2 - 1) * env * amp;
+      }
+    }
+
+    // swell in as she crosses, hold, then let it die away
+    for(let i = 0; i < n; i++){
+      const t = i / sr;
+      const e = t < 0.28 ? t / 0.28
+              : t > dur - 1.5 ? Math.max(0, (dur - t) / 1.5)
+              : 1;
+      d[i] *= e;
+    }
+  }
+  cheerBuf = buf;
+  return buf;
+}
+
+function crowd(){
+  const a = audio(); if(!a || !state.cheer) return;
+  const t = a.currentTime;
+
+  const src = a.createBufferSource();
+  src.buffer = buildCheer(a);
+
+  // take the glare off the top and the rumble off the bottom
+  const lp = a.createBiquadFilter(); lp.type = "lowpass";
+  lp.frequency.value = 2600; lp.Q.value = 0.7;
+  const hp = a.createBiquadFilter(); hp.type = "highpass";
+  hp.frequency.value = 190;
+
+  // keeps the clap peaks from stacking up into a clipped mess
+  const comp = a.createDynamicsCompressor();
+  comp.threshold.value = -18; comp.ratio.value = 4;
+  comp.attack.value = 0.004; comp.release.value = 0.25;
+
+  const g = a.createGain(); g.gain.value = 0.9;
+
+  src.connect(hp).connect(lp).connect(comp).connect(g).connect(a.destination);
+  src.start(t);
+}
+
+/* ---------- waving checkered flag ---------- */
+let flagRAF = 0, flagT0 = 0;
+function startFlag(){
+  const cv = $("flagWave"), ctx = cv.getContext("2d");
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = cv.clientWidth, H = cv.clientHeight;
+  if(!W || !H) return;
+  cv.width = W * dpr; cv.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const sq = Math.max(10, Math.round(H / 5));   // checker size
+
+  // flat checkerboard, drawn once and warped per frame
+  const tile = document.createElement("canvas");
+  tile.width = W; tile.height = H;
+  const tc = tile.getContext("2d");
+  for(let y = 0; y < Math.ceil(H / sq); y++){
+    for(let x = 0; x < Math.ceil(W / sq); x++){
+      tc.fillStyle = (x + y) % 2 ? "#ffffff" : "#0d0d0d";
+      tc.fillRect(x * sq, y * sq, sq, sq);
+    }
+  }
+
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  flagT0 = performance.now();
+  cancelAnimationFrame(flagRAF);
+
+  (function frame(now){
+    const el = (now - flagT0) / 1000;
+    ctx.clearRect(0, 0, W, H);
+    // slice the flag into columns and offset each along a travelling sine —
+    // amplitude grows toward the free edge so the pole side stays anchored
+    for(let x = 0; x < W; x++){
+      const grip = x / W;
+      const amp  = (reduce ? 3 : 9) * grip;
+      const off  = Math.sin(x * 0.045 - el * 6) * amp;
+      const sc   = 1 - Math.cos(x * 0.045 - el * 6) * 0.05 * grip;
+      const h    = H * sc;
+      ctx.drawImage(tile, x, 0, 1, H, x, off + (H - h) / 2, 1, h);
+      // shade the troughs so the cloth reads as folded, not just shifted
+      const shade = Math.sin(x * 0.045 - el * 6 + 1.2) * 0.22 * grip;
+      if(shade > 0){
+        ctx.fillStyle = "rgba(0,0,0," + shade.toFixed(3) + ")";
+        ctx.fillRect(x, off + (H - h) / 2, 1, h);
+      }
+    }
+    flagRAF = requestAnimationFrame(frame);
+  })(flagT0);
+}
+function stopFlag(){ cancelAnimationFrame(flagRAF); flagRAF = 0; }
+
+/* ============================================================
+   BUILD THE BOARD
+   ============================================================ */
+// Fills the board with cells. Sizing happens later, in layoutBoard(),
+// because the race screen is still display:none at this point and nothing
+// on it can be measured yet.
+function buildBoard(){
+  const list = words().slice();
+  if(state.shuffle){
+    for(let i = list.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+  }
+  const board = $("board");
+  board.innerHTML = "";
+  list.forEach((w, i) => {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="w"></span>';
+    cell.querySelector(".w").textContent = w;
+    board.appendChild(cell);
+  });
+
+  raceWords = list;
+  checked = new Set();
+  manual  = new Set();
+}
+
+// In voice mode any word can be checked off (or un-checked) by hand, so a
+// word the microphone keeps missing never becomes a dead end.
+$("board").addEventListener("click", e => {
+  if(!running || state.mode !== "voice") return;
+  const cell = e.target.closest(".cell");
+  if(!cell) return;
+  const i = [].indexOf.call($("board").children, cell);
+  if(i < 0) return;
+  if(checked.has(i)){ checked.delete(i); manual.delete(i); }
+  else { checked.add(i); manual.add(i); }
+  paintChecks();
+  if(checked.size >= raceWords.length) finishRace();
+});
+
+// measure the widest word in the board's font, as a multiple of font-size
+let _measure = null;
+function widestWordEm(){
+  const board = $("board");
+  const cells = board.querySelectorAll(".cell .w");
+  if(!cells.length) return 5;
+  if(!_measure) _measure = document.createElement("canvas").getContext("2d");
+  const cs = getComputedStyle(board.querySelector(".cell"));
+  _measure.font = cs.fontWeight + " 100px " + cs.fontFamily;
+  let max = 0;
+  cells.forEach(el => {
+    const w = _measure.measureText(el.textContent).width;
+    if(w > max) max = w;
+  });
+  return max / 100;
+}
+
+// Picks the row/column split that lets the words be as large as possible on
+// this particular screen, then shrinks to fit as a final guard.
+function layoutBoard(){
+  const board = $("board");
+  const cells = board.querySelectorAll(".cell");
+  const n = cells.length;
+  if(!n) return;
+
+  const W = board.clientWidth, H = board.clientHeight;
+  if(!W || !H) return;
+
+  const gap = parseFloat(getComputedStyle(board).gap) || 6;
+  const wordEm = widestWordEm();
+  // the "12." prefix costs about 1.35em of the cell's own font-size
+  const prefixEm = 1.35;
+  const perCharEm = wordEm + prefixEm;
+
+  let best = { cols: 5, px: 0 };
+  for(const cols of [2,3,4,5,6,7,8,10]){
+    const rows  = Math.ceil(n / cols);
+    const cellW = (W - gap * (cols - 1)) / cols - 6;   // 6 = cell padding
+    const cellH = (H - gap * (rows - 1)) / rows;
+    if(cellW <= 0 || cellH <= 0) continue;
+    // 0.58 not 0.62: the line box is now 1.35em tall, so the type has to be
+    // proportionally smaller to leave the descenders room inside the cell
+    const px = Math.min(cellH * 0.58, cellW / perCharEm);
+    if(px > best.px) best = { cols: cols, px: px };
+  }
+
+  const cols = best.cols;
+  const rows = Math.ceil(n / cols);
+  board.style.gridTemplateColumns = "repeat(" + cols + ", 1fr)";
+  board.style.gridTemplateRows    = "repeat(" + rows + ", 1fr)";
+
+  // faint row banding so her eye doesn't lose its place across the row
+  cells.forEach((c, i) => c.classList.toggle("band", Math.floor(i / cols) % 2 === 1));
+
+  let px = Math.min(best.px, 54) * (state.size / 100);
+  board.style.setProperty("--wsize", px + "px");
+
+  // safety net: step down if anything still overflows its cell
+  let guard = 60;
+  while(guard-- > 0 && px > 9){
+    let over = false;
+    for(const cell of cells){
+      if(cell.scrollWidth > cell.clientWidth + 1){ over = true; break; }
+    }
+    if(!over) break;
+    px -= 1;
+    board.style.setProperty("--wsize", px + "px");
+  }
+}
+
+/* ============================================================
+   VOICE MODE
+   ------------------------------------------------------------
+   Design rule: FAIL OPEN. Speech recognition is trained on adult
+   voices reading sentences; this is a child reading isolated
+   function words, which is the worst case for it. Wrongly
+   accepting a word costs nothing. Wrongly rejecting one tells a
+   kid she read it wrong when she didn't — so every ambiguity
+   resolves in her favour, and any word can be tapped by hand.
+   ============================================================ */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// words that sound alike, or that recognizers habitually swap.
+// Any member of a group is accepted for any other.
+const SOUNDALIKE = [
+  ["write","right","rite"], ["their","there","theyre"], ["buy","by","bye"],
+  ["been","bean","bin"], ["would","wood"], ["or","are","oar","ore"],
+  ["read","red","reed"], ["your","youre","yore"], ["off","of"],
+  ["pull","pool"], ["very","vary","berry"], ["to","two","too"],
+  ["for","four","fore"], ["one","won"], ["know","no"], ["see","sea"],
+  ["here","hear"], ["new","knew"], ["blue","blew"], ["eight","ate"],
+  ["made","maid"], ["way","weigh"], ["wait","weight"], ["son","sun"],
+  ["tale","tail"], ["through","threw"], ["hole","whole"], ["meet","meat"],
+  ["pair","pear","pare"], ["plain","plane"], ["road","rode"], ["sale","sail"],
+  ["weak","week"], ["wear","where","ware"], ["which","witch"],
+  ["flower","flour"], ["cent","sent","scent"], ["deer","dear"],
+  ["hour","our"], ["mail","male"], ["night","knight"], ["peace","piece"],
+  ["sew","so","sow"], ["stair","stare"], ["steal","steel"], ["toe","tow"],
+  ["ant","aunt"], ["bare","bear"], ["beat","beet"], ["board","bored"],
+  ["brake","break"], ["cell","sell"], ["die","dye"], ["fair","fare"],
+  ["heal","heel"], ["knot","not"], ["main","mane"], ["none","nun"],
+  ["pale","pail"], ["past","passed"], ["rain","reign","rein"],
+  ["real","reel"], ["ring","wring"], ["role","roll"], ["scene","seen"],
+  ["seam","seem"], ["some","sum"], ["tide","tied"], ["waist","waste"],
+  ["weather","whether"], ["its","it"], ["dont","dote","donte"],
+  ["does","dose","duz"], ["because","cause","cuz","becuz"],
+  ["again","agin","agen"], ["always","allways"], ["upon","apon"],
+  ["around","round"], ["about","bout"], ["use","yous","youse","ewes"],
+  ["wash","warsh"], ["cold","coled"], ["us","uss"], ["first","furst"],
+  ["why","y","wye"], ["are","r"], ["you","u"], ["oh","o"], ["okay","ok"]
+];
+const SOUND = new Map();
+SOUNDALIKE.forEach(g => g.forEach(w => {
+  const s = SOUND.get(w) || new Set();
+  g.forEach(x => s.add(x));
+  SOUND.set(w, s);
+}));
+
+function norm(s){ return String(s).toLowerCase().replace(/[^a-z]/g, ""); }
+
+// edit distance, capped — we only ever care about "is it within 1"
+function lev(a, b){
+  const m = a.length, n = b.length;
+  let prev = new Array(n + 1), cur = new Array(n + 1);
+  for(let j = 0; j <= n; j++) prev[j] = j;
+  for(let i = 1; i <= m; i++){
+    cur[0] = i;
+    for(let j = 1; j <= n; j++){
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1,
+                        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+    const t = prev; prev = cur; cur = t;
+  }
+  return prev[n];
+}
+
+function wordMatches(spoken, target){
+  const a = norm(spoken), b = norm(target);
+  if(!a || !b) return false;
+  if(a === b) return true;
+  const sa = SOUND.get(b); if(sa && sa.has(a)) return true;
+  const sb = SOUND.get(a); if(sb && sb.has(b)) return true;
+  // one typo/mishearing on a longer word still counts
+  if(b.length >= 4 && Math.abs(a.length - b.length) <= 1 && lev(a, b) <= 1) return true;
+  return false;
+}
+
+let raceWords = [];          // words on the board, in reading order
+let checked   = new Set();   // indices credited
+let manual    = new Set();   // indices the grown-up tapped by hand
+let transcript = "";
+let listening = false, rec = null, micFailed = false;
+let gen = 0;                 // identifies the live recogniser; stale ones self-ignore
+let lastHeardAt = 0, watchdog = 0, sawResult = false;
+
+const LOOKAHEAD = 12;        // how far past her place a word may be credited
+
+// Recomputed from the whole transcript each time, so it is self-correcting
+// and never double-credits a repeated word.
+function creditFrom(text){
+  const toks = text.split(/[^A-Za-z']+/).map(norm).filter(Boolean);
+  const found = new Set(manual);
+  let ptr = 0;
+  for(let t = 0; t < toks.length; t++){
+    while(found.has(ptr)) ptr++;
+    let hit = -1;
+    for(let i = ptr; i < raceWords.length && i < ptr + LOOKAHEAD; i++){
+      if(found.has(i)) continue;
+      if(wordMatches(toks[t], raceWords[i])){ hit = i; break; }
+    }
+    // recognizers split compounds — "around" can come back as "a round"
+    if(hit < 0 && t + 1 < toks.length){
+      const joined = toks[t] + toks[t + 1];
+      for(let i = ptr; i < raceWords.length && i < ptr + LOOKAHEAD; i++){
+        if(found.has(i)) continue;
+        if(wordMatches(joined, raceWords[i])){ hit = i; t++; break; }
+      }
+    }
+    if(hit >= 0){ found.add(hit); ptr = hit + 1; }
+  }
+  return found;
+}
+
+function paintChecks(){
+  const cells = $("board").children;
+  let next = -1;
+  for(let i = 0; i < cells.length; i++){
+    const done = checked.has(i);
+    cells[i].classList.toggle("done", done);
+    cells[i].classList.remove("next");
+    if(!done && next < 0) next = i;
+  }
+  if(next >= 0) cells[next].classList.add("next");
+  $("vcount").textContent = checked.size + " / " + raceWords.length;
+  $("vfill").style.width = (100 * checked.size / raceWords.length) + "%";
+}
+
+function setStatus(txt){
+  $("heard").innerHTML = '<span class="dot"></span>' +
+    (txt ? '<b>' + String(txt).replace(/[<>&]/g, "") + '</b>' : "listening&hellip;");
+}
+const showHeard = setStatus;
+
+function applySpeech(text){
+  const before = checked.size;
+  creditFrom(text).forEach(i => checked.add(i));
+  if(checked.size !== before){
+    paintChecks();
+    beep(1180, .07, "sine", .07);
+    if(checked.size >= raceWords.length) finishRace();
+  }
+}
+
+function startListening(){
+  if(!SR) return false;
+  const mine = ++gen;                  // anything from an older recogniser is ignored
+  try{
+    const r = new SR();
+    rec = r;
+    r.continuous = true;               // iPhones ignore this and stop after each phrase
+    r.interimResults = true;
+    r.lang = "en-US";
+    r.maxAlternatives = 3;
+
+    r.onstart      = () => { if(mine === gen && running && !sawResult) setStatus("Microphone on — start reading"); };
+    r.onspeechstart= () => { if(mine === gen && running && !sawResult) setStatus("I can hear you…"); };
+
+    r.onresult = e => {
+      if(mine !== gen) return;
+      lastHeardAt = performance.now();
+      sawResult = true;
+      let interim = "";
+      for(let i = e.resultIndex; i < e.results.length; i++){
+        const res = e.results[i];
+        if(res.isFinal){
+          // keep a couple of alternatives: on a child's voice the top
+          // guess is often not the right one
+          const alts = [];
+          for(let k = 0; k < Math.min(res.length, 3); k++) alts.push(res[k].transcript);
+          transcript += " " + alts.join(" ");
+        }else{
+          interim += " " + res[0].transcript;
+        }
+      }
+      if(!running) return;
+      // always show the words, matched or not, so a mismatch is visible
+      // rather than looking like the microphone is dead
+      setStatus(interim.trim() || transcript.trim().split(/\s+/).slice(-6).join(" "));
+      applySpeech(transcript + " " + interim);
+    };
+
+    r.onerror = e => {
+      if(mine !== gen) return;
+      if(e.error === "no-speech" || e.error === "aborted"){ return; }   // onend restarts us
+      micFailed = true;
+      listening = false;
+      stopWatchdog();
+      showMicProblem(e.error);
+      if(running) setStatus("Microphone stopped — tap words to check them off");
+    };
+
+    // Safari on iPhone ends the session after every phrase, so this restart
+    // is the whole ball game there, not just a safety net.
+    r.onend = () => {
+      if(mine !== gen || !listening) return;
+      setTimeout(() => {
+        if(mine !== gen || !listening) return;
+        try{ r.start(); }
+        catch(err){ restartMic(); }      // already-started or dead: build a fresh one
+      }, 120);
+    };
+
+    r.start();
+    listening = true;
+    lastHeardAt = performance.now();
+    startWatchdog();
+    return true;
+  }catch(err){
+    micFailed = true;
+    return false;
+  }
+}
+
+// Tear the recogniser down and build a new one. Recovers the case where the
+// engine is alive but has quietly stopped delivering anything.
+function restartMic(){
+  if(!running || state.mode !== "voice") return;
+  listening = false;
+  if(rec){ try{ rec.abort(); }catch(err){} }
+  rec = null;
+  setTimeout(() => { if(running && state.mode === "voice") startListening(); }, 200);
+}
+
+function startWatchdog(){
+  clearInterval(watchdog);
+  watchdog = setInterval(() => {
+    if(!running || !listening) return;
+    const idle = performance.now() - lastHeardAt;
+    if(!sawResult && idle > 5000){
+      setStatus("Not hearing anything yet — check that this page is allowed to use the microphone");
+    }
+    if(idle > 7000){
+      lastHeardAt = performance.now();
+      restartMic();
+    }
+  }, 2500);
+}
+function stopWatchdog(){ clearInterval(watchdog); watchdog = 0; }
+
+function stopListening(){
+  gen++;                         // orphan the current recogniser's callbacks
+  listening = false;
+  stopWatchdog();
+  if(rec){ try{ rec.abort(); }catch(err){} rec = null; }
+}
+
+function showMicProblem(code){
+  const local  = location.protocol === "file:";
+  const framed = window.top !== window.self;
+  let msg;
+  if(code === "frame"){
+    msg = "<b>This page can't reach the microphone.</b> The game is running inside a " +
+          "frame that wasn't granted microphone access, and a page can't grant that to " +
+          "itself. Open the file saved on your computer instead — voice mode works there.";
+  }else if(code === "not-allowed" || code === "service-not-allowed" || code === "NotAllowedError"){
+    msg = framed
+      ? "<b>The microphone was refused.</b> That's usually because the game is inside a " +
+        "frame without microphone permission. Try the copy saved on your computer."
+      : local
+        ? "<b>The microphone is blocked.</b> Chrome refuses the mic for files opened " +
+          "straight off the disk — try opening this same file in Safari, which allows it."
+        : "<b>The microphone is blocked.</b> Allow microphone access for this page, then press GO again.";
+  }else if(code === "audio-capture" || code === "NotFoundError"){
+    msg = "<b>No microphone found.</b> Check that one is connected and not in use by another app.";
+  }else if(code === "nogum"){
+    msg = "<b>This browser won't allow microphone access here.</b> Voice mode needs Chrome or Safari on a normal page.";
+  }else{
+    msg = "<b>Voice mode couldn't start</b> (" + code + "). Tap-the-flag mode still works.";
+  }
+  $("micWarn").innerHTML = msg + " You can still tap each word to check it off by hand.";
+  $("micWarn").hidden = false;
+}
+
+// Works out *why* the microphone is unavailable, so the game can say something
+// useful instead of sitting on "Starting the microphone…" forever.
+// Runs alongside the recogniser rather than before it: awaiting anything here
+// would spend the user gesture that iPhones require to grant the mic.
+function diagnoseMic(){
+  try{
+    if(window.top !== window.self && document.featurePolicy &&
+       document.featurePolicy.allowsFeature &&
+       !document.featurePolicy.allowsFeature("microphone")){
+      listening = false; stopWatchdog();
+      showMicProblem("frame");
+      if(running) setStatus("No microphone here — tap each word to check it off");
+      return;
+    }
+  }catch(e){}
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showMicProblem("nogum");
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(s => { s.getTracks().forEach(t => t.stop()); })   // release it for the recogniser
+    .catch(err => {
+      listening = false; stopWatchdog();
+      showMicProblem(err && err.name ? err.name : "unknown");
+      if(running) setStatus("No microphone — tap each word to check it off");
+    });
+}
+
+/* ============================================================
+   THE RACE
+   ============================================================ */
+let t0 = 0, ticker = 0, running = false;
+
+// setInterval rather than rAF: rAF is frozen while the tab is hidden, which
+// would leave the clock stuck at 0.0 if she tabbed away mid-race. The time
+// that actually counts is measured from performance.now() at the finish, so
+// this only drives the display.
+function tick(){
+  if(!running) return;
+  $("clock").textContent = fmt(performance.now() - t0);
+}
+
+function startCountdown(){
+  const ac = audio();            // unlock audio inside the user gesture
+  stopFlag();                    // don't animate a flag nobody can see
+  // render the cheer now, during the idle countdown, rather than paying for
+  // it at the finish line where it would stutter the flag and confetti
+  if(ac && state.cheer) setTimeout(() => { try{ buildCheer(ac); }catch(e){} }, 0);
+  buildBoard();
+  show("count");
+
+  // Warm the recogniser up during the lights so it is already live at GO.
+  // Anything it hears before the flag drops is discarded in beginRace().
+  // Must happen inside the GO click: iPhones only grant the microphone from a
+  // direct user gesture, so starting this later (from the countdown timer)
+  // would be refused outright.
+  if(state.mode === "voice"){
+    micFailed = false;
+    sawResult = false;
+    $("micWarn").hidden = true;
+    stopListening();
+    const ok = startListening();
+    if(!ok) showMicProblem("start-failed");
+    diagnoseMic();
+  }
+
+  const lights = document.querySelectorAll(".light");
+  lights.forEach(l => l.className = "light");
+  const cw = $("countWord");
+  cw.className = "countword";
+  cw.textContent = "Ready";
+
+  const steps = ["3", "2", "1"];
+  steps.forEach((label, i) => {
+    setTimeout(() => {
+      lights[i].classList.add("red");
+      cw.textContent = label;
+      beep(440, .16, "square", .16);
+    }, 700 + i * 700);
+  });
+
+  setTimeout(() => {
+    lights.forEach(l => l.className = "light green");
+    cw.textContent = "GO!";
+    cw.classList.add("green");
+    beep(880, .3, "square", .18);
+    rev();
+  }, 700 + 3 * 700);
+
+  setTimeout(beginRace, 700 + 3 * 700 + 480);
+}
+
+function beginRace(){
+  const voice = state.mode === "voice";
+  show("race");
+  $("clock").classList.toggle("hidden", !state.showClock);
+  $("clock").textContent = "0.0";
+
+  $("vbar").hidden  = !voice;
+  $("heard").hidden = !voice;
+  $("finishLabel").textContent = voice ? "STOP" : "FINISH";
+  document.body.classList.toggle("voice", voice);
+
+  if(voice){
+    transcript = "";          // throw away anything heard during the countdown
+    sawResult = false;
+    lastHeardAt = performance.now();
+    setStatus(listening ? "Microphone on — start reading" : "Starting the microphone…");
+    paintChecks();
+  }
+
+  // The board is visible now, so it can be measured. layoutBoard() reads
+  // clientWidth, which forces layout synchronously — no rAF needed, and rAF
+  // would never fire at all if the tab happened to be hidden.
+  layoutBoard();
+
+  t0 = performance.now();
+  running = true;
+  clearInterval(ticker);
+  ticker = setInterval(tick, 60);
+}
+
+function finishRace(){
+  if(!running) return;
+  running = false;
+  clearInterval(ticker);
+  stopListening();
+
+  const ms = performance.now() - t0;
+  const head = $("doneHead"), delta = $("doneDelta");
+
+  // Voice mode can be stopped part-way. A partial read is not a lap, so it
+  // is shown but never recorded — otherwise stopping early would "win".
+  if(state.mode === "voice" && checked.size < raceWords.length){
+    $("doneTime").textContent = fmt(ms);
+    stopFlag();
+    $("flagWave").hidden = true;      // she didn't cross the line, so no flag
+    head.textContent = "Stopped Early";
+    head.classList.remove("record");
+    delta.textContent = "Got through " + checked.size + " of " + raceWords.length +
+                        " words — this one doesn't go on the board.";
+    delta.className = "delta";
+    renderLaps();
+    show("done");
+    return;
+  }
+
+  const bk = bestKey(), lk = lapsKey();
+  const prevBest = state[bk];
+  const isRecord = prevBest === null || ms < prevBest;
+
+  state[lk].unshift({ ms: ms, date: Date.now() });
+  state[lk] = state[lk].slice(0, 12);
+  if(isRecord) state[bk] = ms;
+  save();
+
+  $("doneTime").textContent = fmt(ms);
+
+  if(isRecord && prevBest !== null){
+    head.textContent = "New Track Record!";
+    head.classList.add("record");
+    delta.textContent = fmt(prevBest - ms) + " seconds faster than her best";
+    delta.className = "delta better";
+  }else if(isRecord){
+    head.textContent = "Checkered Flag!";
+    head.classList.remove("record");
+    delta.textContent = "First lap on the board — that's the time to beat.";
+    delta.className = "delta";
+  }else{
+    head.textContent = "Checkered Flag!";
+    head.classList.remove("record");
+    delta.textContent = fmt(ms - prevBest) + " off her best of " + fmt(prevBest);
+    delta.className = "delta worse";
+  }
+
+  renderLaps();
+  show("done");
+
+  // Finishing at all earns the flag, the crowd and the confetti — the record
+  // is what adds the fanfare on top of it.
+  $("flagWave").hidden = false;
+  startFlag();
+  crowd();
+  confetti();
+  if(isRecord) setTimeout(fanfare, 420);
+}
+
+// The record is always the fastest lap still on the board — so deleting a
+// fluke also clears the record it set, instead of leaving one she can never beat.
+function recomputeBest(){
+  const laps = state[lapsKey()];
+  state[bestKey()] = laps.length ? Math.min.apply(null, laps.map(l => l.ms)) : null;
+}
+
+let undoSnap = null, undoTimer = 0;
+
+function offerUndo(msg){
+  clearTimeout(undoTimer);
+  $("undoMsg").textContent = msg;
+  $("undoBar").hidden = false;
+  undoTimer = setTimeout(() => { undoSnap = null; $("undoBar").hidden = true; }, 9000);
+}
+
+function removeLap(i){
+  undoSnap = { key: lapsKey(), bkey: bestKey(),
+               laps: state[lapsKey()].slice(), best: state[bestKey()] };
+  state[lapsKey()].splice(i, 1);
+  recomputeBest();
+  save();
+  renderLaps(); renderRecord();
+  offerUndo("Lap removed.");
+}
+
+$("undoBtn").addEventListener("click", () => {
+  if(!undoSnap) return;
+  state[undoSnap.key]  = undoSnap.laps;
+  state[undoSnap.bkey] = undoSnap.best;
+  undoSnap = null;
+  clearTimeout(undoTimer);
+  save();
+  renderLaps(); renderRecord();
+  $("undoBar").hidden = true;
+});
+
+function renderLaps(){
+  const box = $("lapsBox"), list = $("lapList");
+  const laps = state[lapsKey()], best = state[bestKey()];
+  if(!laps.length){ box.hidden = true; return; }
+  box.hidden = false;
+  $("lapsTitle").textContent = state.mode === "voice" ? "Recent Laps · Read Aloud" : "Recent Laps";
+  list.innerHTML = "";
+  laps.slice(0, 8).forEach((lap, i) => {
+    const d = new Date(lap.date);
+    const row = document.createElement("div");
+    row.className = "lap";
+    const when = d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+                 " · " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    row.innerHTML = '<span class="when">' + when + '</span>' +
+                    '<span><span class="t">' + fmt(lap.ms) + '</span>' +
+                    (lap.ms === best ? ' <span class="p">BEST</span>' : '') + '</span>';
+    const del = document.createElement("button");
+    del.className = "del";
+    del.textContent = "Delete";
+    del.title = "Remove this lap";
+    del.addEventListener("click", () => removeLap(i));
+    row.appendChild(del);
+    list.appendChild(row);
+  });
+}
+
+function renderRecord(){
+  const box = $("recordBox"), best = state[bestKey()];
+  if(best === null){ box.hidden = true; return; }
+  box.hidden = false;
+  $("recordVal").textContent = fmt(best);
+}
+
+/* ============================================================
+   CONFETTI
+   ============================================================ */
+function confetti(){
+  const cv = $("confetti"), ctx = cv.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = innerWidth * dpr; cv.height = innerHeight * dpr;
+  cv.style.width = innerWidth + "px"; cv.style.height = innerHeight + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const colors = ["#ffcc00", "#e02b2b", "#ffffff", "#2563eb", "#22c55e", "#111111"];
+  const bits = [];
+  for(let i = 0; i < 140; i++){
+    bits.push({
+      x: Math.random() * innerWidth,
+      y: -20 - Math.random() * innerHeight * .5,
+      w: 6 + Math.random() * 8,
+      h: 8 + Math.random() * 12,
+      vy: 2 + Math.random() * 3.5,
+      vx: -1.4 + Math.random() * 2.8,
+      rot: Math.random() * Math.PI,
+      vr: -.12 + Math.random() * .24,
+      c: colors[(Math.random() * colors.length) | 0]
+    });
+  }
+
+  const started = performance.now();
+  (function draw(now){
+    const age = now - started;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    if(age > 3600){ return; }
+    const fade = age > 2600 ? 1 - (age - 2600) / 1000 : 1;
+    ctx.globalAlpha = Math.max(0, fade);
+    bits.forEach(b => {
+      b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.vy += .045;
+      ctx.save();
+      ctx.translate(b.x, b.y); ctx.rotate(b.rot);
+      ctx.fillStyle = b.c;
+      ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+      ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  })(started);
+}
+
+/* ============================================================
+   WIRING
+   ============================================================ */
+$("goBtn").addEventListener("click", startCountdown);
+$("againBtn").addEventListener("click", startCountdown);
+$("finishBtn").addEventListener("click", finishRace);
+$("homeBtn").addEventListener("click", () => { renderRecord(); show("start"); });
+
+// spacebar: start from home/results, finish during a race
+addEventListener("keydown", e => {
+  if(e.code !== "Space" && e.key !== " ") return;
+  if(document.querySelector(".modal.on")) return;
+  if(e.target.tagName === "TEXTAREA") return;
+  e.preventDefault();
+  if(running) finishRace();
+  else if(screens.start.classList.contains("on") || screens.done.classList.contains("on")) startCountdown();
+});
+
+addEventListener("resize", () => { if(screens.race.classList.contains("on")) layoutBoard(); });
+
+/* ---------- word editor ---------- */
+function openEditor(){
+  $("wordsInput").value = words().join("\n");
+  updateCount();
+  $("editModal").classList.add("on");
+}
+function updateCount(){
+  const n = parseWords($("wordsInput").value).length;
+  const el = $("wordCount");
+  el.textContent = n + (n === 1 ? " word" : " words");
+  el.className = "count" + (n === 50 ? " good" : n === 0 ? " bad" : "");
+  if(n !== 50 && n > 0) el.textContent += "  (list is called 1–50 — heads up)";
+}
+function parseWords(text){
+  return text.split("\n").map(s => s.trim()).filter(Boolean);
+}
+$("editBtn").addEventListener("click", openEditor);
+$("wordsInput").addEventListener("input", updateCount);
+$("cancelWords").addEventListener("click", () => $("editModal").classList.remove("on"));
+$("saveWords").addEventListener("click", () => {
+  const list = parseWords($("wordsInput").value);
+  state.words = list.length ? list : null;
+  save();
+  $("editModal").classList.remove("on");
+});
+$("resetWords").addEventListener("click", () => {
+  $("wordsInput").value = DEFAULT_WORDS.join("\n");
+  updateCount();
+});
+
+/* ---------- settings ---------- */
+// Shows on the start screen which options are live, so "is shuffle actually on?"
+// is answerable at a glance — it matters because each copy of the game (Desktop
+// file, localhost, shared link) keeps its own separate settings.
+function paintFlags(){
+  const box = $("onFlags");
+  const on = [];
+  if(state.shuffle)    on.push(["Shuffled", ""]);
+  if(!state.showClock) on.push(["Clock hidden", "quiet"]);
+  if(!state.sound)     on.push(["Muted", "quiet"]);
+  if(state.size !== 100) on.push(["Text " + state.size + "%", "quiet"]);
+  box.innerHTML = "";
+  on.forEach(([label, cls]) => {
+    const s = document.createElement("span");
+    s.className = "chip " + cls;
+    s.textContent = label;
+    box.appendChild(s);
+  });
+}
+
+function paintSettings(){
+  $("tgClock").classList.toggle("on", state.showClock);
+  $("tgShuffle").classList.toggle("on", state.shuffle);
+  $("tgSound").classList.toggle("on", state.sound);
+  $("tgCheer").classList.toggle("on", state.cheer);
+  $("tgFont").classList.toggle("on", state.kidFont);
+  $("szVal").textContent = state.size + "%";
+  document.body.classList.toggle("kidfont", state.kidFont);
+  paintFlags();
+}
+function toggle(key, id){
+  $(id).addEventListener("click", () => { state[key] = !state[key]; save(); paintSettings(); });
+}
+toggle("showClock", "tgClock");
+toggle("shuffle", "tgShuffle");
+toggle("sound", "tgSound");
+toggle("cheer", "tgCheer");
+
+$("hearCheer").addEventListener("click", e => {
+  e.stopPropagation();
+  const was = state.cheer;
+  state.cheer = true;      // let them audition it even while it's switched off
+  crowd();
+  state.cheer = was;
+});
+toggle("kidFont", "tgFont");
+
+$("szUp").addEventListener("click", () => { state.size = Math.min(160, state.size + 10); save(); paintSettings(); });
+$("szDown").addEventListener("click", () => { state.size = Math.max(60, state.size - 10); save(); paintSettings(); });
+
+$("setBtn").addEventListener("click", () => { paintSettings(); $("setModal").classList.add("on"); });
+$("closeSet").addEventListener("click", () => $("setModal").classList.remove("on"));
+// One click, with Undo on the results screen — no confirm dialog (blocked in
+// iframes anyway) and no tap-twice dance.
+$("clearTimes").addEventListener("click", () => {
+  undoSnap = { key: lapsKey(), bkey: bestKey(),
+               laps: state[lapsKey()].slice(), best: state[bestKey()] };
+  state[lapsKey()] = [];
+  state[bestKey()] = null;
+  save();
+  renderRecord(); renderLaps();
+  offerUndo("All times erased.");
+  $("setModal").classList.remove("on");
+});
+
+// tapping the dark backdrop closes a modal
+document.querySelectorAll(".modal").forEach(m => {
+  m.addEventListener("click", e => { if(e.target === m) m.classList.remove("on"); });
+});
+
+/* ---------- mode picker ---------- */
+function paintMode(){
+  document.querySelectorAll(".mode").forEach(b =>
+    b.classList.toggle("on", b.dataset.mode === state.mode));
+  $("modeHint").textContent = state.mode === "voice"
+    ? "She reads out loud. Each word ticks off as she says it, and the race ends itself at 50."
+    : "You press FINISH when she reads the last word.";
+  document.body.classList.toggle("voice", state.mode === "voice");
+  renderRecord();
+}
+document.querySelectorAll(".mode").forEach(b => {
+  b.addEventListener("click", () => {
+    if(b.disabled) return;
+    state.mode = b.dataset.mode;
+    save();
+    $("micWarn").hidden = true;
+    paintMode();
+  });
+});
+
+/* ---------- boot ---------- */
+if(!SR){
+  // no Web Speech API at all (Firefox, older browsers)
+  $("modeVoice").disabled = true;
+  if(state.mode === "voice"){ state.mode = "tap"; save(); }
+  $("micWarn").innerHTML =
+    "<b>Voice mode needs Chrome or Safari.</b> This browser doesn't offer speech " +
+    "recognition, so only tap-the-flag mode is available here.";
+  $("micWarn").hidden = false;
+}else if(location.protocol === "file:"){
+  // Chrome refuses the microphone for pages opened straight off disk
+  $("micWarn").innerHTML =
+    "<b>Heads up:</b> voice mode usually can't reach the microphone when this file " +
+    "is opened from your Desktop. Use the shared link for voice mode — tap-the-flag " +
+    "works fine either way.";
+  $("micWarn").hidden = false;
+}
+paintSettings();
+paintMode();
+
+// Offline support, but only where a service worker can actually live: not from
+// a file:// page, and not inside someone else's frame.
+if("serviceWorker" in navigator &&
+   window.top === window.self &&
+   (location.protocol === "https:" || location.hostname === "localhost")){
+  addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

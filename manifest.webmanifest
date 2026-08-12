@@ -1,0 +1,26 @@
+{
+  "name": "Daytona Words 1–50",
+  "short_name": "Daytona 50",
+  "description": "A timed sight-word reading race. Press GO, read all 50 words, cross the finish line.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#15171c",
+  "theme_color": "#15171c",
+  "categories": ["education", "kids"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
