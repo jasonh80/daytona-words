@@ -7,7 +7,7 @@
 
    Bump VERSION whenever the shell changes; old caches are cleared on activate. */
 
-const VERSION = "daytona-words-v6";
+const VERSION = "daytona-words-v7";
 const SHELL = [
   "./",
   "./index.html",
@@ -15,6 +15,7 @@ const SHELL = [
   "./brand-daytona-50-of-words.png",
   "./icon-192.png",
   "./icon-512.png",
+  "./icon-512-maskable.png",
   "./apple-touch-icon.png"
 ];
 

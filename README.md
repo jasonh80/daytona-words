@@ -10,6 +10,14 @@ get faster week to week.
 
 **Play it:** https://jasonh80.github.io/daytona-words/
 
+## Install it
+
+Tap **Install App** on the start screen. On iPhone or iPad, open the link in
+Safari, tap Share, choose **Add to Home Screen**, turn on **Open as Web App**,
+and tap Add. On Android, the button opens the browser's native install prompt
+when available. The installed app launches without normal browser chrome and
+keeps the game shell available offline after the first visit.
+
 ## Two modes
 
 - **I'll tap the flag** — a grown-up presses FINISH after the last word.
@@ -17,11 +25,6 @@ get faster week to week.
 - **Listen to me read** — the microphone checks words off as they are read and the
   race ends itself at 50. Needs Chrome or Safari, and browser speech recognition
   is unreliable on children's voices, so any word can also be tapped by hand.
-
-## Install it like an app
-
-Open the link on a phone or tablet, then **Share → Add to Home Screen**. It runs
-full screen with no address bar and works offline.
 
 ## Changing the 50 words
 
@@ -37,7 +40,7 @@ near the top of the script in `index.html`.
 | `brand-daytona-50-of-words.png` | Primary artwork used in the app and for its install icon |
 | `manifest.webmanifest` | Home-screen install metadata |
 | `sw.js` | Offline caching. Page is network-first, assets cache-first |
-| `make-icon.py` | Renders the primary artwork into the three app icon sizes on macOS |
+| `make-icon.py` | Renders the primary artwork into standard and maskable app icons on macOS |
 
 Best times and settings live in each browser's local storage, so every device
 keeps its own record.

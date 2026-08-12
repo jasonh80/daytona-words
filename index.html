@@ -767,6 +767,10 @@ button:focus-visible, textarea:focus-visible{
   color:#dbe7f0;font-size:11.5px;
 }
 .tbtn:hover{background:rgba(67,183,233,.15);border-color:var(--blue);}
+.tbtn.install{
+  color:#17243a;background:linear-gradient(180deg,#ffe071,var(--yellow));
+  border-color:#fff1a8;box-shadow:0 4px 12px rgba(0,0,0,.28);
+}
 
 #count{
   background:
@@ -857,6 +861,26 @@ body.voice .cell.next{background:#fff0b8;box-shadow:inset 0 0 0 3px var(--maroon
 .tg.on{background:var(--maroon-bright);}
 textarea{background:#041321;border-color:#416785;}
 .preview{border-color:#416785;}
+.install-sheet{max-width:440px;text-align:center;}
+.install-logo{
+  display:block;width:104px;height:104px;margin:0 auto 17px;
+  border-radius:15%;box-shadow:0 0 0 3px var(--yellow),0 10px 25px rgba(0,0,0,.4);
+}
+.install-steps{
+  margin:18px 0 0;padding:0;list-style:none;text-align:left;
+  display:grid;gap:10px;
+}
+.install-steps li{
+  display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:center;
+  padding:10px 12px;border:1px solid #416785;border-radius:10px;
+  background:rgba(255,255,255,.045);color:#e8f0f6;font-size:14px;line-height:1.35;
+}
+.install-steps .step-num{
+  display:grid;place-items:center;width:28px;height:28px;border-radius:50%;
+  background:var(--maroon-bright);color:#fff;font-weight:900;
+}
+.install-note{margin:12px 0 0;color:#a8bdd0;font-size:12px;line-height:1.45;}
+@media (display-mode:standalone){.install{display:none !important;}}
 
 @media (max-width:560px){
   #start{justify-content:flex-start;padding-top:24px;}
@@ -925,6 +949,7 @@ textarea{background:#041321;border-color:#416785;}
   </div>
 
   <div class="tools">
+    <button class="tbtn install" id="installBtn">Install App</button>
     <button class="tbtn" id="editBtn">Edit the 50 words</button>
     <button class="tbtn" id="setBtn">Settings</button>
   </div>
@@ -990,6 +1015,20 @@ textarea{background:#041321;border-color:#416785;}
 </div>
 
 <canvas id="confetti"></canvas>
+
+<!-- ========================= INSTALL APP ========================= -->
+<div class="modal" id="installModal" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+  <div class="sheet install-sheet">
+    <img class="install-logo" src="icon-192.png" alt="">
+    <h3 id="installTitle">Install Daytona 50 of Words</h3>
+    <p class="note" id="installIntro"></p>
+    <ol class="install-steps" id="installSteps"></ol>
+    <p class="install-note">Once installed, it opens from the Home Screen like an app and keeps working offline after the first visit.</p>
+    <div class="btnrow">
+      <button class="big ghost" id="closeInstall">Close</button>
+    </div>
+  </div>
+</div>
 
 <!-- ========================== WORD EDITOR ========================== -->
 <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="wordsTitle">
@@ -2136,6 +2175,70 @@ $("clearTimes").addEventListener("click", () => {
 document.querySelectorAll(".modal").forEach(m => {
   m.addEventListener("click", e => { if(e.target === m) m.classList.remove("on"); });
 });
+
+/* ---------- app installation ---------- */
+let deferredInstallPrompt = null;
+const isAppleMobile = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isIOSSafari = isAppleMobile && /safari/i.test(navigator.userAgent) &&
+  !/crios|fxios|edgios/i.test(navigator.userAgent);
+const isInstalledApp = () => window.matchMedia("(display-mode: standalone)").matches ||
+  navigator.standalone === true;
+
+function installHelp(){
+  const intro = $("installIntro");
+  const steps = $("installSteps");
+  const step = (n, text) => `<li><span class="step-num">${n}</span><span>${text}</span></li>`;
+
+  if(isAppleMobile){
+    intro.textContent = isIOSSafari
+      ? "In Safari, add it to this device's Home Screen:"
+      : "Open this page in Safari first, then add it to the Home Screen:";
+    steps.innerHTML =
+      step(1, isIOSSafari ? "Tap Safari's Share button." : "Open the link in Safari, then tap the Share button.") +
+      step(2, "Scroll down and tap Add to Home Screen.") +
+      step(3, "Turn on Open as Web App, then tap Add.");
+  }else if(/android/i.test(navigator.userAgent)){
+    intro.textContent = "Add it to this phone or tablet:";
+    steps.innerHTML =
+      step(1, "Open the browser menu (⋮).") +
+      step(2, "Tap Install app or Add to Home screen.") +
+      step(3, "Confirm Install.");
+  }else{
+    intro.textContent = "Install it from your browser:";
+    steps.innerHTML =
+      step(1, "Look for the install icon in the address bar or browser menu.") +
+      step(2, "Choose Install app.") +
+      step(3, "Confirm Install.");
+  }
+  $("installModal").classList.add("on");
+}
+
+addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  $("installBtn").hidden = false;
+});
+
+$("installBtn").addEventListener("click", async () => {
+  if(isInstalledApp()) return;
+  if(deferredInstallPrompt){
+    const prompt = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if(choice.outcome === "accepted") $("installBtn").hidden = true;
+    return;
+  }
+  installHelp();
+});
+$("closeInstall").addEventListener("click", () => $("installModal").classList.remove("on"));
+addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  $("installBtn").hidden = true;
+  $("installModal").classList.remove("on");
+});
+if(isInstalledApp()) $("installBtn").hidden = true;
 
 /* ---------- mode picker ---------- */
 function paintMode(){
