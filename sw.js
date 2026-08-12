@@ -1,4 +1,4 @@
-/* Service worker for Daytona Words 1-50.
+/* Service worker for Daytona 50 of Words.
 
    Strategy is split on purpose:
      - the page itself is network-first, so a refresh always picks up the
@@ -7,12 +7,12 @@
 
    Bump VERSION whenever the shell changes; old caches are cleared on activate. */
 
-const VERSION = "daytona-words-v5";
+const VERSION = "daytona-words-v6";
 const SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./fcs-paladin-head.gif",
+  "./brand-daytona-50-of-words.png",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png"

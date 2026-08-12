@@ -1,6 +1,6 @@
 {
-  "name": "Daytona Words 1–50",
-  "short_name": "Daytona Words 1–50",
+  "name": "Daytona 50 of Words",
+  "short_name": "Daytona 50 of Words",
   "description": "A timed sight-word reading race. Press GO, read all 50 words, cross the finish line.",
   "start_url": "./index.html",
   "scope": "./",

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Daytona Words 1–50</title>
+<title>Daytona 50 of Words</title>
 
 <!-- Installs to the home screen and runs without browser chrome.
      These 404 harmlessly when the file is opened straight off the disk. -->
@@ -12,12 +12,12 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Daytona Words 1–50">
+<meta name="apple-mobile-web-app-title" content="Daytona 50 of Words">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <style>
 /* ============================================================
-   DAYTONA WORDS 1-50
+   DAYTONA 50 OF WORDS
    A timed sight-word reading race.
    Everything is in this one file. No internet needed.
    ============================================================ */
@@ -565,18 +565,18 @@ textarea{
    School-spirit navy + maroon, with original stock-car details.
    ============================================================ */
 :root{
-  --asphalt:#071b33;
-  --asphalt-2:#0b2745;
-  --line:#31516f;
+  --asphalt:#03172f;
+  --asphalt-2:#09284a;
+  --line:#335979;
   --paper:#fffaf0;
   --ink:#10253d;
   --red:#8c2444;
-  --yellow:#f7c948;
+  --yellow:#f8b817;
   --green:#39d67d;
-  --blue:#43b7e9;
+  --blue:#3f91c7;
   --muted:#a8bdd0;
-  --maroon:#7b1f3a;
-  --maroon-bright:#a83254;
+  --maroon:#780b2b;
+  --maroon-bright:#a4113b;
   --cream:#fff8e8;
 }
 
@@ -624,6 +624,24 @@ button:focus-visible, textarea:focus-visible{
     linear-gradient(112deg,transparent 0 8%,rgba(123,31,58,.7) 8% 9.4%,transparent 9.4% 11%,rgba(247,201,72,.8) 11% 12%,transparent 12% 13.2%,rgba(67,183,233,.62) 13.2% 13.8%,transparent 13.8% 100%),
     linear-gradient(68deg,transparent 0 86.2%,rgba(67,183,233,.42) 86.2% 86.8%,transparent 86.8% 88%,rgba(247,201,72,.55) 88% 89%,transparent 89% 90.2%,rgba(123,31,58,.5) 90.2% 91.4%,transparent 91.4% 100%);
   opacity:.72;pointer-events:none;
+}
+
+.brand-block{
+  display:flex;flex-direction:column;align-items:center;
+  width:min(340px,48vw);margin:3px 0 0;
+}
+.brand-hero{
+  width:100%;margin:0;line-height:0;
+  overflow:hidden;border-radius:13%;background:#fff;
+  box-shadow:0 0 0 3px #051a35,0 0 0 6px var(--yellow),0 18px 42px rgba(0,0,0,.5);
+}
+.brand-hero img{display:block;width:100%;height:auto;}
+.school-brand{
+  margin:11px 0 0;padding:5px 13px;
+  border:1px solid rgba(248,184,23,.7);border-radius:999px;
+  color:#fff;background:linear-gradient(180deg,rgba(164,17,59,.94),rgba(90,6,31,.94));
+  box-shadow:0 4px 12px rgba(0,0,0,.28);
+  font-size:9px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
 }
 
 .school-lockup{
@@ -769,10 +787,11 @@ button:focus-visible, textarea:focus-visible{
 .hud .who b{color:var(--yellow);}
 .hud-lockup{display:flex;align-items:center;gap:9px;}
 .hud-mark{
-  width:34px;height:38px;object-fit:cover;padding:2px;background:#fff;
-  clip-path:polygon(50% 0,94% 13%,86% 73%,50% 100%,14% 73%,6% 13%);
-  filter:drop-shadow(0 3px 5px rgba(0,0,0,.38));
+  width:44px;height:44px;object-fit:cover;background:#fff;border-radius:10px;
+  box-shadow:0 0 0 2px var(--yellow),0 4px 9px rgba(0,0,0,.45);
 }
+.hud-title{color:#fff;font-weight:900;font-style:italic;line-height:.92;text-transform:uppercase;}
+.hud-title b{display:block;font-size:11px;letter-spacing:.06em;color:var(--yellow);}
 .clock{color:#fff;text-shadow:3px 3px 0 var(--maroon);}
 .board{
   background:var(--cream);border:4px solid var(--yellow);border-radius:12px;
@@ -807,6 +826,12 @@ body.voice .cell.next{background:#fff0b8;box-shadow:inset 0 0 0 3px var(--maroon
     radial-gradient(ellipse at 50% -10%,#17476e 0%,var(--asphalt) 65%);
   overflow-x:hidden;
 }
+.result-brand,.count-brand{
+  display:block;object-fit:cover;background:#fff;border-radius:14%;
+  box-shadow:0 0 0 2px var(--yellow),0 8px 20px rgba(0,0,0,.42);
+}
+.result-brand{width:78px;height:78px;margin:0 0 14px;}
+.count-brand{width:74px;height:74px;margin:0 0 28px;}
 .headline{font-style:italic;text-shadow:3px 3px 0 var(--maroon);}
 .victory-label{
   margin:0 0 6px;color:var(--yellow);font-size:9px;font-weight:900;
@@ -835,25 +860,24 @@ textarea{background:#041321;border-color:#416785;}
 
 @media (max-width:560px){
   #start{justify-content:flex-start;padding-top:24px;}
-  .school-lockup{margin-top:4px;}
-  .school-mark{width:46px;height:51px;}
-  .school-name{font-size:10px;}
+  .brand-block{width:min(250px,61vw);margin-top:5px;}
+  .school-brand{font-size:7.5px;margin-top:8px;padding:4px 10px;}
   .race-kicker{font-size:7.5px;padding:4px 9px;}
   .title{font-size:clamp(28px,9vw,43px);}
   .title .fifty{display:block;margin:.12em 0 0;font-size:1.6em;}
   .subtitle{margin-top:8px;font-size:9px;gap:7px;}
-  .modes{margin-top:12px;width:min(100%,380px);}
+  .modes{margin-top:10px;width:min(100%,380px);}
   .mode{flex:1;padding:8px 9px;white-space:normal;line-height:1.15;}
   .modehint{min-height:32px;margin-bottom:0;}
-  .go{margin-top:11px;width:min(37vw,148px);height:min(37vw,148px);border-width:6px;}
+  .go{margin-top:10px;width:min(34vw,138px);height:min(34vw,138px);border-width:6px;}
   .tools{margin-top:11px;}
   .tbtn{padding:8px 12px;}
 }
 @media (orientation:landscape) and (max-height:620px){
   #start{justify-content:flex-start;padding-top:18px;}
   #start::before{height:220px;box-shadow:0 0 0 18px rgba(255,255,255,.018),0 0 0 38px rgba(255,255,255,.012);}
-  .school-lockup{position:absolute;left:25px;top:32px;margin:0;}
-  .school-lockup .school-name{display:none;}
+  .brand-block{position:absolute;left:24px;top:50%;transform:translateY(-50%);width:min(23vw,174px);margin:0;}
+  .school-brand{font-size:6px;letter-spacing:.08em;padding:4px 7px;white-space:nowrap;}
   .race-kicker{margin-top:0;}
   .title{font-size:34px;}
   .title .title-top{display:none;}
@@ -878,13 +902,12 @@ textarea{background:#041321;border-color:#416785;}
 <section id="start" class="screen on">
   <div class="flagstrip"></div>
 
-  <div class="school-lockup" aria-label="Fellowship Christian School">
-    <img class="school-mark" src="fcs-paladin-head.gif" alt="">
-    <span class="school-name">Fellowship Christian School</span>
+  <div class="brand-block">
+    <h1 class="brand-hero">
+      <img src="brand-daytona-50-of-words.png" alt="Daytona 50 of Words">
+    </h1>
+    <p class="school-brand">Fellowship Christian School</p>
   </div>
-  <h1 class="title">Daytona Words <span class="fifty">1&ndash;50</span></h1>
-  <p class="subtitle"><span>50 words</span><span>One fast reader</span></p>
-  <div class="series-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <div class="flags" id="onFlags"></div>
 
   <div class="modes">
@@ -913,6 +936,7 @@ textarea{background:#041321;border-color:#416785;}
 
 <!-- ========================== COUNTDOWN ========================== -->
 <section id="count" class="screen">
+  <img class="count-brand" src="brand-daytona-50-of-words.png" alt="">
   <div class="lights">
     <div class="light" data-i="0"></div>
     <div class="light" data-i="1"></div>
@@ -924,7 +948,7 @@ textarea{background:#041321;border-color:#416785;}
 <!-- ============================ RACE ============================ -->
 <section id="race" class="screen">
   <div class="hud">
-    <div class="who"><span class="hud-lockup"><img class="hud-mark" src="fcs-paladin-head.gif" alt=""><span>Daytona Words<b>1&ndash;50</b></span></span></div>
+    <div class="who"><span class="hud-lockup"><img class="hud-mark" src="brand-daytona-50-of-words.png" alt=""><span class="hud-title">Daytona<b>50 of Words</b></span></span></div>
     <div class="clock" id="clock">0.0</div>
   </div>
 
@@ -944,6 +968,7 @@ textarea{background:#041321;border-color:#416785;}
 <!-- =========================== RESULTS =========================== -->
 <section id="done" class="screen">
   <canvas id="flagWave"></canvas>
+  <img class="result-brand" src="brand-daytona-50-of-words.png" alt="">
   <p class="headline" id="doneHead">Checkered Flag!</p>
   <div class="bigtime" id="doneTime">0.0</div>
   <p class="delta" id="doneDelta"></p>
@@ -2018,7 +2043,7 @@ function updateCount(){
   const el = $("wordCount");
   el.textContent = n + (n === 1 ? " word" : " words");
   el.className = "count" + (n === 50 ? " good" : n === 0 ? " bad" : "");
-  if(n !== 50 && n > 0) el.textContent += "  (list is called 1–50 — heads up)";
+  if(n !== 50 && n > 0) el.textContent += "  (this race is designed for 50 words)";
 }
 function parseWords(text){
   return text.split("\n").map(s => s.trim()).filter(Boolean);
