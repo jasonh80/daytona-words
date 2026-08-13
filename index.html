@@ -643,6 +643,10 @@ button:focus-visible, textarea:focus-visible{
   box-shadow:0 4px 12px rgba(0,0,0,.28);
   font-size:9px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
 }
+.week-label{
+  margin:10px 0 0;color:var(--yellow);font-size:11px;font-weight:900;
+  letter-spacing:.14em;text-transform:uppercase;
+}
 
 .school-lockup{
   display:flex;align-items:center;justify-content:center;gap:11px;
@@ -931,6 +935,7 @@ textarea{background:#041321;border-color:#416785;}
       <img src="brand-daytona-50-of-words.png" alt="Daytona 50 of Words">
     </h1>
     <p class="school-brand">Fellowship Christian School</p>
+    <p class="week-label" id="weekLabel">Week of August 17–21</p>
   </div>
   <div class="flags" id="onFlags"></div>
 
@@ -950,7 +955,7 @@ textarea{background:#041321;border-color:#416785;}
 
   <div class="tools">
     <button class="tbtn install" id="installBtn">Install App</button>
-    <button class="tbtn" id="editBtn">Edit the 50 words</button>
+    <button class="tbtn" id="editBtn">Edit weekly words</button>
     <button class="tbtn" id="setBtn">Settings</button>
   </div>
 
@@ -1033,7 +1038,7 @@ textarea{background:#041321;border-color:#416785;}
 <!-- ========================== WORD EDITOR ========================== -->
 <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="wordsTitle">
   <div class="sheet">
-    <h3 id="wordsTitle">The 50 Words</h3>
+    <h3 id="wordsTitle">Weekly Words</h3>
     <p class="note">One word per line, in reading order. Paste the list straight from the class sheet &mdash; extra blank lines are ignored.</p>
     <textarea id="wordsInput" spellcheck="false"></textarea>
     <div class="count" id="wordCount">0 words</div>
@@ -1042,7 +1047,7 @@ textarea{background:#041321;border-color:#416785;}
       <button class="big ghost" id="cancelWords">Cancel</button>
     </div>
     <div style="text-align:center;margin-top:10px;">
-      <button class="danger" id="resetWords">Reset to the default list</button>
+      <button class="danger" id="resetWords">Reset to this week's list</button>
     </div>
   </div>
 </div>
@@ -1120,23 +1125,23 @@ textarea{background:#041321;border-color:#416785;}
 /* ============================================================
    THE WORD LIST
    ------------------------------------------------------------
-   PLACEHOLDER: a standard 2nd-grade sight word list.
-   Swap in her real 50 either by editing the array below,
-   or (easier) with the "Edit the 50 words" button on the
-   start screen — that version is saved on this computer and
-   wins over this list.
+   Current spelling list from Mrs. Bachstein's weekly newsletter.
+   The two capitalized entries are the newsletter's challenge words.
+   A list entered with "Edit weekly words" is saved on this device
+   and takes precedence over the published weekly list.
    ============================================================ */
+const WEEKLY_WORD_SET = {
+  id: "2026-08-17",
+  label: "Week of August 17–21",
+  source: "August 17-21 newsletter.pptx"
+};
 const DEFAULT_WORDS = [
-  "about","after","again","always","another",
-  "around","because","been","before","best",
-  "both","buy","call","cold","does",
-  "don't","fast","first","five","found",
-  "gave","goes","green","its","made",
-  "many","off","or","pull","read",
-  "right","sing","sit","sleep","tell",
-  "their","these","those","upon","us",
-  "use","very","wash","which","why",
-  "wish","work","would","write","your"
+  "crop","sled","desk",
+  "test","plot","flock",
+  "clock","spend","nest",
+  "spent","west","Avery",
+  "drop","block","Will",
+  "left","tent"
 ];
 
 /* ---------- tiny storage helpers ---------- */
@@ -2081,8 +2086,10 @@ function updateCount(){
   const n = parseWords($("wordsInput").value).length;
   const el = $("wordCount");
   el.textContent = n + (n === 1 ? " word" : " words");
-  el.className = "count" + (n === 50 ? " good" : n === 0 ? " bad" : "");
-  if(n !== 50 && n > 0) el.textContent += "  (this race is designed for 50 words)";
+  el.className = "count" + (n === DEFAULT_WORDS.length ? " good" : n === 0 ? " bad" : "");
+  if(n !== DEFAULT_WORDS.length && n > 0){
+    el.textContent += `  (this week's published list has ${DEFAULT_WORDS.length})`;
+  }
 }
 function parseWords(text){
   return text.split("\n").map(s => s.trim()).filter(Boolean);
@@ -2245,8 +2252,10 @@ function paintMode(){
   document.querySelectorAll(".mode").forEach(b =>
     b.classList.toggle("on", b.dataset.mode === state.mode));
   $("modeHint").textContent = state.mode === "voice"
-    ? "Read out loud. Each word checks off as it is heard, and the flag waves at 50."
+    ? `Read out loud. Each word checks off as it is heard, and the flag waves at ${words().length}.`
     : "A grown-up waves the flag after the last word.";
+  $("weekLabel").textContent = WEEKLY_WORD_SET.label;
+  $("vcount").textContent = "0 / " + words().length;
   document.body.classList.toggle("voice", state.mode === "voice");
   renderRecord();
 }

@@ -1,10 +1,10 @@
 # Daytona 50 of Words
 
-A timed sight-word reading race for young readers at Fellowship Christian School.
+A timed weekly spelling-word reading race for young readers at Fellowship Christian School.
 The visual system uses the supplied Daytona 50 of Words artwork, Fellowship navy
 and maroon, gold, checkered flags, racetrack curves, and the recognizable Paladin.
 
-Press **GO**, read all 50 words out loud, then hit the checkered flag to stop
+Press **GO**, read the current weekly words out loud, then hit the checkered flag to stop
 the clock. It keeps a track record and recent laps so readers can watch themselves
 get faster week to week.
 
@@ -23,12 +23,12 @@ keeps the game shell available offline after the first visit.
 - **I'll tap the flag** — a grown-up presses FINISH after the last word.
   Works on every device.
 - **Listen to me read** — the microphone checks words off as they are read and the
-  race ends itself at 50. Needs Chrome or Safari, and browser speech recognition
+  race ends after the complete weekly list. Needs Chrome or Safari, and browser speech recognition
   is unreliable on children's voices, so any word can also be tapped by hand.
 
-## Changing the 50 words
+## Changing the weekly words
 
-Use **Edit the 50 words** on the start screen — paste one word per line. The list
+Use **Edit weekly words** on the start screen — paste one word per line. The list
 is saved in that browser. To change the built-in default, edit `DEFAULT_WORDS`
 near the top of the script in `index.html`.
 
