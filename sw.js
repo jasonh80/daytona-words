@@ -7,7 +7,7 @@
 
    Bump VERSION whenever the shell changes; old caches are cleared on activate. */
 
-const VERSION = "daytona-words-v8";
+const VERSION = "daytona-words-v9";
 const SHELL = [
   "./",
   "./index.html",

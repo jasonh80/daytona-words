@@ -3,7 +3,7 @@
   "short_name": "Daytona 50 of Words",
   "id": "./",
   "lang": "en-US",
-  "description": "A timed weekly spelling-word race. Press GO, read the complete list, and cross the finish line.",
+  "description": "A timed 50-word vocabulary race. Press GO, read all 50 words, and cross the finish line.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
